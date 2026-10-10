@@ -1,0 +1,15 @@
+{
+  "name": "4eng-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cloudflare-hosted marketing website for 4ENG.",
+  "scripts": {
+    "build": "python build.py",
+    "dev": "wrangler dev",
+    "check": "npm run build && wrangler deploy --dry-run",
+    "deploy": "npm run build && wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "4.149.0"
+  }
+}

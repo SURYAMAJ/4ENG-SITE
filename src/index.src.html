@@ -1,0 +1,1537 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>4ENG | AI Execution Platform for Engineering Firms</title>
+<!--@SEO-START-->
+<meta name="description" content="4ENG is an AI execution platform for engineering firms. Turn approved requirements into reviewed loop drawings, panel GAs, PLC packages and handover evidence.">
+<link rel="canonical" href="{{SITE}}/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#F2F2F3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1D2D3D" media="(prefers-color-scheme: dark)">
+<meta name="author" content="4ENG">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="4ENG">
+<meta property="og:title" content="4ENG | More engineering. Every deliverable connected.">
+<meta property="og:description" content="The AI execution platform for engineering firms. From approved requirements to reviewed drawings, code and handover evidence.">
+<meta property="og:url" content="{{SITE}}/">
+<meta property="og:image" content="{{SITE}}/assets/logo/4eng-social-avatar-400.png">
+<meta property="og:image:width" content="400">
+<meta property="og:image:height" content="400">
+<meta property="og:image:alt" content="4ENG shared-stem monogram">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="4ENG | AI Execution Platform for Engineering Firms">
+<meta name="twitter:description" content="From approved requirements to reviewed drawings, code and handover evidence.">
+<meta name="twitter:image" content="{{SITE}}/og-image.png">
+<link rel="icon" href="/favicon.ico?v=shared-stem" sizes="32x32">
+<link rel="icon" href="/favicon.svg?v=shared-stem" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=shared-stem">
+<link rel="manifest" href="/site.webmanifest?v=shared-stem">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "{{SITE}}/#org",
+      "name": "4ENG",
+      "url": "{{SITE}}/",
+      "logo": "{{SITE}}/assets/logo/4eng-shared-stem-lockup-accent-2000w.png",
+      "email": "{{EMAIL}}",
+      "description": "4ENG builds an AI execution platform that helps engineering firms turn approved requirements into reviewed engineering deliverables."
+    },
+    {
+      "@type": "WebSite",
+      "@id": "{{SITE}}/#website",
+      "url": "{{SITE}}/",
+      "name": "4ENG",
+      "publisher": { "@id": "{{SITE}}/#org" },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "4ENG",
+      "applicationCategory": "BusinessApplication",
+      "applicationSubCategory": "Engineering automation",
+      "operatingSystem": "Web",
+      "url": "{{APP}}/",
+      "publisher": { "@id": "{{SITE}}/#org" },
+      "description": "AI execution platform for engineering firms: a shared engineering model, tested production skills and governed review for loop drawings, panel general arrangements, control packages, proposals and handover evidence.",
+      "featureList": [
+        "Shared engineering model with stable object identities",
+        "Loop drawing and termination schedule generation from a verified connection model",
+        "Constraint-checked panel general arrangements and BOMs",
+        "Cross-discipline change impact review",
+        "Versioned, independently tested engineering skills",
+        "Human approval before any output is issued"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [{{FAQ_JSONLD}}]
+    }
+  ]
+}
+</script>
+<!--@SEO-END-->
+<!--@FONTS-->
+<style>
+/* Layout concept: the page is an engineering drawing set. Each section is a sheet with a small title block that states its readiness. */
+:root {
+  --paper: #EEF2F1;       /* drafting film */
+  --sheet: #F8FAF9;       /* raised sheet */
+  --ink: #142230;         /* graphite-navy ink */
+  --ink-2: #4B5B69;       /* secondary ink */
+  --rule: #BFCBCE;        /* construction lines */
+  --grid: rgba(20, 34, 48, .055);
+  --cad: #1F5FD6;         /* CAD selection blue: the one accent */
+  --cad-soft: #DCE6FA;
+  --redline: #C2382C;     /* markups and stale outputs only */
+  --redline-soft: #F6DEDA;
+  --pass: #1B7A52;        /* verified */
+  --pass-soft: #D6EDE2;
+  --on-cad: #FFFFFF;
+  --display: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --body: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --anno: "B612", "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --wrap: 1200px;
+  --gutter: clamp(16px, 4vw, 40px);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #111A24; --sheet: #172331; --ink: #E6EDF0; --ink-2: #9AABB8; --rule: #314354;
+    --grid: rgba(230, 237, 240, .045); --cad: #6E9BFF; --cad-soft: #1D2E4C; --redline: #FF8172;
+    --redline-soft: #3B2122; --pass: #4FC48C; --pass-soft: #15332A; --on-cad: #0D1520; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #111A24; --sheet: #172331; --ink: #E6EDF0; --ink-2: #9AABB8; --rule: #314354;
+  --grid: rgba(230, 237, 240, .045); --cad: #6E9BFF; --cad-soft: #1D2E4C; --redline: #FF8172;
+  --redline-soft: #3B2122; --pass: #4FC48C; --pass-soft: #15332A; --on-cad: #0D1520; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: var(--body); font-size: 17px; line-height: 1.55; font-stretch: 100%;
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+img, svg { max-width: 100%; }
+a { color: var(--cad); text-underline-offset: 3px; }
+:focus-visible { outline: 2.5px solid var(--cad); outline-offset: 3px; border-radius: 2px; }
+.wrap { max-width: var(--wrap); margin-inline: auto; padding-inline: var(--gutter); }
+.skip { position: absolute; left: -9999px; top: 8px; background: var(--ink); color: var(--paper); padding: 8px 12px; z-index: 50; }
+.skip:focus { left: 8px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Type */
+h1, h2, h3 { font-family: var(--display); color: var(--ink); text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.6rem, 7.2vw, 5.6rem); font-weight: 780; font-stretch: 118%; line-height: .96; letter-spacing: -.02em; }
+h2 { font-size: clamp(1.85rem, 3.6vw, 2.9rem); font-weight: 730; font-stretch: 112%; line-height: 1.04; letter-spacing: -.012em; }
+h3 { font-size: clamp(1.2rem, 1.9vw, 1.45rem); font-weight: 680; font-stretch: 106%; line-height: 1.2; }
+p { margin: 0; }
+.lead { font-size: clamp(1.05rem, 1.4vw, 1.2rem); color: var(--ink-2); max-width: 62ch; }
+.anno { font-family: var(--anno); font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+.num { font-variant-numeric: tabular-nums; }
+
+/* Header */
+.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 40;
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--rule);
+}
+.top .wrap { display: flex; align-items: center; gap: 24px; min-height: 64px; }
+.brand { display: inline-flex; }
+.brand-lockup { display: inline-grid; }
+.brand-lockup img { grid-area: 1 / 1; height: 40px; width: auto; display: block; }
+.brand .logo-white { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .brand .logo-accent { display: none; }
+  :root:not([data-theme="light"]) .brand .logo-white { display: block; }
+}
+:root[data-theme="dark"] .brand .logo-accent { display: none; }
+:root[data-theme="dark"] .brand .logo-white { display: block; }
+.nav { display: flex; gap: 22px; margin-left: auto; align-items: center; }
+.nav a { color: var(--ink); text-decoration: none; font-size: 15px; font-weight: 500; }
+.nav a:hover { color: var(--cad); }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font: 600 15.5px/1 var(--body); text-decoration: none; cursor: pointer;
+  padding: 13px 18px; border-radius: 3px; border: 1.5px solid var(--ink);
+  background: transparent; color: var(--ink); transition: background .15s, color .15s, border-color .15s;
+}
+.btn:hover { border-color: var(--cad); color: var(--cad); }
+.btn-primary { background: var(--cad); border-color: var(--cad); color: var(--on-cad); }
+.btn-primary:hover { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn-sm { padding: 10px 14px; font-size: 14.5px; }
+.menu-btn { display: none; margin-left: auto; }
+@media (max-width: 980px) {
+  .nav a:not(.btn) { display: none; }
+  .nav.open { position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 0; background: var(--paper); border-bottom: 1px solid var(--rule); padding: 8px var(--gutter) 16px; }
+  .nav.open a:not(.btn) { display: block; padding: 12px 0; border-bottom: 1px solid var(--rule); }
+  .nav.open .btn { margin-top: 12px; }
+  .menu-btn { display: inline-flex; }
+  .nav:not(.open) { margin-left: 0; }
+}
+.signup { flex: none; }
+@media (max-width: 980px) { .menu-btn { margin-left: auto; } }
+@media (max-width: 520px) { .nav:not(.open) .btn { display: none; } .top .wrap { gap: 10px; } }
+
+/* Sheet device: every section opens on a rule with a title block */
+.sheet { padding-block: clamp(64px, 9vw, 116px); border-top: 1px solid var(--rule); }
+.sheet-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px 40px; align-items: start; margin-bottom: clamp(32px, 5vw, 56px); }
+.sheet-head > div { display: grid; gap: 18px; min-width: 0; }
+.tblock { display: inline-grid; grid-template-columns: auto auto; border: 1px solid var(--ink); font-family: var(--anno); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+.tblock span { padding: 6px 9px; }
+.tblock span + span { border-left: 1px solid var(--ink); }
+.tblock .s-prop { color: var(--cad); }
+.tblock .s-illu { color: var(--redline); }
+.tblock .s-obs { color: var(--pass); }
+@media (max-width: 760px) { .sheet-head { grid-template-columns: minmax(0, 1fr); } .tblock { justify-self: start; order: -1; } }
+
+/* Hero */
+.hero { padding-block: clamp(40px, 6vw, 72px) clamp(56px, 7vw, 88px); }
+.hero h1 { max-width: 15ch; }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(28px, 4vw, 56px); margin-top: clamp(28px, 4vw, 48px); align-items: start; }
+.hero-copy { display: grid; gap: 22px; align-content: start; }
+.hero-copy .lead { color: var(--ink); }
+.cta-row { display: flex; flex-wrap: wrap; gap: 12px; }
+.note { font-size: 14px; color: var(--ink-2); max-width: 46ch; border-left: 2px solid var(--rule); padding-left: 12px; }
+@media (max-width: 900px) { .hero-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* Drawing frame (hero) */
+.frame { position: relative; border: 1.5px solid var(--ink); background: var(--sheet); padding: 22px; }
+.frame::before { content: ""; position: absolute; inset: 7px; border: .75px solid var(--ink); pointer-events: none; }
+.zones-x, .zones-y { position: absolute; display: flex; font-family: var(--anno); font-size: 8.5px; color: var(--ink-2); pointer-events: none; }
+.zones-x { left: 7px; right: 7px; top: -1px; height: 8px; }
+.zones-x span { flex: 1; text-align: center; line-height: 8px; border-left: .75px solid var(--ink); }
+.zones-x span:first-child { border-left: 0; }
+.zones-y { top: 7px; bottom: 7px; left: -1px; width: 8px; flex-direction: column; }
+.zones-y span { flex: 1; display: grid; place-items: center; border-top: .75px solid var(--ink); }
+.zones-y span:first-child { border-top: 0; }
+.scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.scroll-x > svg { display: block; width: 100%; height: auto; }
+.frame-foot { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center; justify-content: space-between; margin-top: 14px; position: relative; }
+.frame-foot .caption { font-size: 14px; color: var(--ink-2); max-width: 52ch; }
+.frame-foot .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.tb-grid { display: grid; grid-template-columns: repeat(4, auto); border: 1px solid var(--ink); font-family: var(--anno); font-size: 10px; letter-spacing: .05em; text-transform: uppercase; margin-top: 14px; position: relative; width: max-content; max-width: 100%; margin-left: auto; }
+.tb-grid div { padding: 5px 9px; border-left: 1px solid var(--ink); }
+.tb-grid div:first-child { border-left: 0; }
+.tb-grid b { display: block; font-weight: 700; color: var(--ink); font-size: 10.5px; }
+.tb-grid small { color: var(--ink-2); font-size: 8.5px; }
+@media (max-width: 640px) { .scroll-x > svg.min560 { min-width: 560px; } .zones-x, .zones-y { display: none; } .frame { padding: 14px; } .frame::before { display: none; } .tb-grid { grid-template-columns: repeat(2, auto); margin-left: 0; } .tb-grid div:nth-child(3) { border-left: 0; } .tb-grid div:nth-child(n+3) { border-top: 1px solid var(--ink); } }
+
+/* Shared SVG drawing styles */
+.dw { font-family: var(--anno); }
+.dw .ln { stroke: var(--ink); fill: none; stroke-width: 1.4; }
+.dw .ln2 { stroke: var(--ink-2); fill: none; stroke-width: 1.1; }
+.dw .lt { stroke: var(--rule); fill: none; stroke-width: 1; }
+.dw .dash { stroke: var(--rule); fill: none; stroke-width: 1; stroke-dasharray: 5 4; }
+.dw .pp { fill: var(--sheet); stroke: var(--ink); stroke-width: 1.3; }
+.dw .pp2 { fill: var(--paper); stroke: var(--rule); stroke-width: 1; }
+.dw .fill-ink { fill: var(--ink); }
+.dw .fill-paper { fill: var(--sheet); }
+.dw .t { fill: var(--ink); font-size: 10px; }
+.dw .t2 { fill: var(--ink-2); font-size: 9px; }
+.dw .tb { fill: var(--ink); font-size: 11px; font-weight: 700; }
+.dw .tbody { fill: var(--ink); font-family: var(--body); font-size: 14px; }
+.dw .acc { stroke: var(--cad); fill: none; stroke-width: 1.6; }
+.dw .acc-f { fill: var(--cad); }
+.dw .red { stroke: var(--redline); fill: none; stroke-width: 1.4; }
+.dw .red-t { fill: var(--redline); font-size: 9px; font-weight: 700; }
+.dw .hatch { fill: url(#hatch); stroke: var(--ink-2); stroke-width: .8; }
+.dw .ok { stroke: var(--pass); fill: none; stroke-width: 1.8; }
+
+/* Hero package diagram */
+#pkg .chip rect { stroke-width: 1; }
+#pkg .st-queued rect { fill: var(--sheet); stroke: var(--rule); } #pkg .st-queued text { fill: var(--ink-2); }
+#pkg .st-gen rect { fill: var(--cad-soft); stroke: var(--cad); } #pkg .st-gen text { fill: var(--cad); }
+#pkg .st-checked rect { fill: var(--pass-soft); stroke: var(--pass); } #pkg .st-checked text { fill: var(--pass); }
+#pkg .st-exc rect { fill: var(--redline-soft); stroke: var(--redline); } #pkg .st-exc text { fill: var(--redline); }
+#pkg .st-ready rect { fill: var(--sheet); stroke: var(--cad); } #pkg .st-ready text { fill: var(--cad); }
+#pkg .st-issued rect { fill: var(--pass); stroke: var(--pass); } #pkg .st-issued text { fill: var(--sheet); }
+#pkg .chip text { font-size: 8.5px; font-weight: 700; letter-spacing: .04em; }
+#pkg .step circle { fill: var(--sheet); stroke: var(--rule); stroke-width: 1.4; transition: fill .3s, stroke .3s; }
+#pkg .step text { fill: var(--ink-2); font-size: 10px; text-anchor: middle; }
+#pkg .step.done circle { fill: var(--ink); stroke: var(--ink); }
+#pkg .step.on circle { fill: var(--cad); stroke: var(--cad); }
+#pkg .step.on text { fill: var(--cad); font-weight: 700; }
+#pkg .wire { stroke: var(--ink-2); fill: none; stroke-width: 1.2; }
+#pkg .wire.live { stroke: var(--cad); }
+#pkg .jdot { fill: var(--ink); }
+#pkg .exc-cloud { opacity: 0; transition: opacity .3s; }
+#pkg .exc-cloud.on { opacity: 1; }
+#pkg .stamp { opacity: 0; transform-box: fill-box; transform-origin: center; }
+#pkg .stamp.on { opacity: 1; animation: stamp .35s ease-out; }
+@keyframes stamp { from { transform: scale(1.5) rotate(-14deg); opacity: 0; } to { transform: scale(1) rotate(-8deg); opacity: 1; } }
+#pkg .model-ring { stroke: var(--cad); fill: none; stroke-width: 2; opacity: 0; transform-box: fill-box; transform-origin: center; }
+#pkg .model-ring.pulse { animation: ring 1.4s ease-out; }
+@keyframes ring { 0% { opacity: .9; transform: scale(.85); } 100% { opacity: 0; transform: scale(1.25); } }
+.draw { stroke-dasharray: 1; stroke-dashoffset: 0; }
+.drawing .draw { stroke-dashoffset: 1; }
+.drawing .draw.go { transition: stroke-dashoffset .9s ease-out; stroke-dashoffset: 0; }
+
+/* Problem */
+.rcycle { padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin-top: 40px; border-top: 1.5px solid var(--ink); }
+.rcycle li { list-style: none; padding: 18px 20px 0 0; display: grid; gap: 8px; align-content: start; position: relative; }
+.rcycle li + li { padding-left: 20px; border-left: 1px solid var(--rule); }
+.rcycle .k { font-family: var(--anno); font-size: 12px; color: var(--cad); font-weight: 700; }
+.rcycle p { color: var(--ink-2); font-size: 15.5px; }
+.rcycle ol { margin: 0; padding: 0; }
+.statement { margin-top: 44px; font-family: var(--display); font-stretch: 108%; font-weight: 600; font-size: clamp(1.25rem, 2.2vw, 1.7rem); max-width: 34ch; line-height: 1.25; }
+@media (max-width: 760px) { .rcycle { grid-template-columns: 1fr 1fr; row-gap: 24px; } .rcycle li:nth-child(3) { padding-left: 0; border-left: 0; } }
+@media (max-width: 440px) { .rcycle { grid-template-columns: minmax(0, 1fr); } .rcycle li + li { padding-left: 0; border-left: 0; border-top: 1px solid var(--rule); padding-top: 16px; } }
+.fig { margin: 0; min-width: 0; }
+.fig figcaption { font-size: 14px; color: var(--ink-2); margin-top: 12px; max-width: 70ch; }
+
+/* Platform: elevation of three engines on a slab */
+.elev { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 2.4vw, 28px); padding-inline: clamp(8px, 2vw, 24px); }
+.engine { background: var(--sheet); border: 1.5px solid var(--ink); border-bottom: 0; padding: 22px 20px 26px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.engine .role { font-family: var(--display); font-stretch: 112%; font-weight: 750; font-size: 1.5rem; line-height: 1.1; }
+.engine .name { font-family: var(--anno); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--cad); }
+.engine ul { margin: 6px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.engine li { font-size: 15px; color: var(--ink-2); padding-left: 16px; position: relative; }
+.engine li::before { content: ""; position: absolute; left: 0; top: .62em; width: 7px; height: 7px; border: 1.5px solid var(--ink-2); border-radius: 50%; }
+.engine.mid { border-color: var(--cad); }
+.slab { border: 1.5px solid var(--ink); padding: 14px 18px; display: flex; flex-wrap: wrap; gap: 10px 26px; align-items: center;
+  background-color: var(--sheet);
+  background-image: repeating-linear-gradient(45deg, transparent 0 9px, var(--rule) 9px 10px); }
+.slab span { background: var(--sheet); padding: 3px 8px; font-weight: 600; font-size: 15px; }
+.slab .anno { background: var(--sheet); padding: 3px 8px; }
+@media (max-width: 820px) { .elev { grid-template-columns: 1fr; padding-inline: 0; } .engine { border-bottom: 1.5px solid var(--ink); } .engine.mid { border-bottom-color: var(--cad); } .slab { margin-top: 14px; } }
+
+/* Asset explorer */
+.asset { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(24px, 4vw, 56px); align-items: center; }
+.facet { cursor: pointer; }
+.facet rect { fill: var(--sheet); stroke: var(--ink); stroke-width: 1.3; transition: fill .2s, stroke .2s; }
+.facet text { fill: var(--ink); font-size: 12px; font-family: var(--body); font-weight: 600; pointer-events: none; }
+.facet .fsub { fill: var(--ink-2); font-size: 10px; font-family: var(--anno); font-weight: 400; }
+.facet:hover rect, .facet:focus-visible rect { stroke: var(--cad); }
+.facet:focus { outline: none; }
+.facet:focus-visible rect { stroke-width: 2.5; }
+.facet[aria-pressed="true"] rect { fill: var(--cad); stroke: var(--cad); }
+.facet[aria-pressed="true"] text { fill: var(--on-cad); }
+.spoke { stroke: var(--rule); stroke-width: 1.2; fill: none; transition: stroke .2s; }
+.spoke.on { stroke: var(--cad); stroke-width: 2; }
+.views { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; border-top: 1.5px solid var(--ink); }
+.views li { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 11px 4px 11px 0; border-bottom: 1px solid var(--rule); font-size: 15px; color: var(--ink-2); transition: color .2s; min-width: 0; }
+.views li:nth-child(odd) { padding-right: 14px; }
+.views li:nth-child(even) { padding-left: 14px; border-left: 1px solid var(--rule); }
+.views li .anno { font-size: 9.5px; }
+.views li.on { color: var(--ink); font-weight: 600; }
+.views li.on .anno { color: var(--cad); }
+.views li .dot { width: 9px; height: 9px; flex: none; border-radius: 50%; border: 1.5px solid var(--rule); align-self: center; }
+.views li.on .dot { background: var(--cad); border-color: var(--cad); }
+.views-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; gap: 12px; flex-wrap: wrap; }
+.views-head h3 { font-size: 1.15rem; }
+@media (max-width: 860px) { .asset { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 440px) { .views { grid-template-columns: minmax(0, 1fr); } .views li:nth-child(even) { padding-left: 0; border-left: 0; } }
+
+/* Skill anatomy */
+.contract { margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); counter-reset: s; border: 1.5px solid var(--ink); background: var(--sheet); }
+.contract li { list-style: none; padding: 22px 20px; display: grid; gap: 8px; align-content: start; position: relative; min-width: 0; }
+.contract li + li { border-left: 1px solid var(--ink); }
+.contract li + li::before { content: ""; position: absolute; left: -7px; top: 30px; width: 12px; height: 12px; background: var(--sheet); border-top: 1px solid var(--ink); border-right: 1px solid var(--ink); transform: rotate(45deg); }
+.contract .k { font-family: var(--anno); font-size: 12px; color: var(--cad); font-weight: 700; }
+.contract h3 { font-size: 1.12rem; }
+.contract p { color: var(--ink-2); font-size: 15px; }
+.contract ol { margin: 0; padding: 0; }
+@media (max-width: 860px) { .contract { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .contract li:nth-child(3) { border-left: 0; } .contract li:nth-child(n+3) { border-top: 1px solid var(--ink); } .contract li:nth-child(3)::before { display: none; } }
+@media (max-width: 480px) { .contract { grid-template-columns: minmax(0, 1fr); } .contract li + li { border-left: 0; border-top: 1px solid var(--ink); } .contract li + li::before { display: none; } }
+.life { margin-top: 36px; display: grid; gap: 14px; }
+.life ol { display: flex; flex-wrap: wrap; margin: 0; padding: 0; list-style: none; gap: 0; }
+.life li { flex: 1 1 140px; position: relative; padding: 24px 12px 0 0; font-weight: 600; font-size: 15px; }
+.life li::before { content: ""; position: absolute; top: 6px; left: 0; right: 0; height: 2px; background: var(--rule); }
+.life li::after { content: ""; position: absolute; top: 0; left: 0; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--ink); background: var(--paper); }
+.life li:first-child::after { background: var(--ink); }
+@media (max-width: 560px) { .life ol { flex-direction: column; gap: 10px; } .life li { flex: none; padding: 0 0 0 24px; } .life li::before { top: 0; bottom: -10px; left: 4px; right: auto; width: 2px; height: auto; } .life li:last-child::before { display: none; } .life li::after { top: 6px; } }
+.life .gate { font-size: 15px; color: var(--ink-2); max-width: 70ch; }
+
+/* Flagship rows */
+.flag { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: clamp(24px, 4vw, 56px); align-items: start; }
+.flag + .flag { margin-top: clamp(48px, 7vw, 88px); padding-top: clamp(40px, 6vw, 72px); border-top: 1px dashed var(--rule); }
+.flag-copy { display: grid; gap: 18px; align-content: start; }
+.io { margin: 0; padding: 0; list-style: none; display: grid; gap: 0; border-top: 1.5px solid var(--ink); }
+.io li { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--rule); font-size: 15.5px; }
+.io li b { font-family: var(--anno); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--cad); padding-top: 3px; }
+.flag .frame { padding: 16px; }
+.flag .frame::before { display: none; }
+.checks { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 12px; font-size: 14px; }
+.checks span { display: inline-flex; gap: 6px; align-items: center; color: var(--pass); font-weight: 600; }
+.checks svg { width: 14px; height: 14px; }
+.hold { margin-top: 10px; font-size: 14px; color: var(--ink-2); display: flex; gap: 8px; align-items: baseline; }
+.hold b { color: var(--redline); font-family: var(--anno); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+@media (max-width: 900px) { .flag { grid-template-columns: minmax(0, 1fr); } }
+.sig { stroke: var(--cad); stroke-width: 2.4; fill: none; stroke-dasharray: 10 190; stroke-linecap: round; animation: sig 3.2s linear infinite; }
+@keyframes sig { from { stroke-dashoffset: 200; } to { stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: reduce) { .sig { animation: none; display: none; } }
+
+/* Change impact demo */
+.impact { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(20px, 3vw, 40px); align-items: stretch; }
+.source { border: 1.5px solid var(--ink); background: var(--sheet); padding: 22px; display: grid; gap: 16px; align-content: start; }
+.source .tag { font-family: var(--anno); font-size: 12px; color: var(--ink-2); }
+.rating { font-family: var(--display); font-stretch: 115%; font-weight: 780; font-size: clamp(2.2rem, 4.4vw, 3.2rem); line-height: 1; display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.rating .old { color: var(--ink-2); text-decoration: line-through; text-decoration-color: var(--redline); text-decoration-thickness: 3px; font-size: .6em; }
+.rating .unit { font-size: .45em; font-weight: 600; color: var(--ink-2); }
+.delta { font-family: var(--anno); font-size: 12px; color: var(--redline); font-weight: 700; }
+.source .btns { display: flex; flex-wrap: wrap; gap: 10px; }
+.log { font-size: 14px; color: var(--ink-2); min-height: 3em; border-left: 2px solid var(--rule); padding-left: 12px; }
+.disc { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.dcard { border: 1.5px solid var(--ink); background: var(--sheet); padding: 16px 18px; display: grid; gap: 10px; align-content: start; transition: border-color .3s; min-width: 0; }
+.dcard header { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.dcard h3 { font-size: 1.05rem; }
+.dcard .route { font-size: 13px; color: var(--ink-2); min-height: 1.4em; }
+.dcard ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.dcard li { display: flex; justify-content: space-between; gap: 10px; padding: 7px 0; border-top: 1px solid var(--rule); font-size: 14.5px; align-items: center; }
+.state { font-family: var(--anno); font-size: 9.5px; letter-spacing: .05em; text-transform: uppercase; padding: 3px 7px; border: 1px solid var(--rule); color: var(--ink-2); white-space: nowrap; transition: all .25s; }
+.state.stale { border-color: var(--redline); color: var(--redline); background: var(--redline-soft); }
+.state.regen { border-color: var(--cad); color: var(--cad); background: var(--cad-soft); }
+.dcard.hit { border-color: var(--redline); }
+.dcard.regen { border-color: var(--cad); }
+@media (max-width: 900px) { .impact { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 560px) { .disc { grid-template-columns: minmax(0, 1fr); } }
+.principle { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 8px 28px; font-weight: 600; }
+.principle span { display: inline-flex; gap: 8px; align-items: baseline; }
+.principle span::before { content: attr(data-n); font-family: var(--anno); font-size: 11px; color: var(--cad); }
+
+/* Trust */
+.lanes { border: 1.5px solid var(--ink); background: var(--sheet); }
+.lanes .who, .lanes .what { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.lanes .who div { padding: 12px 18px; font-family: var(--anno); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; border-bottom: 1px solid var(--ink); }
+.lanes .who div:nth-child(1) { color: var(--cad); }
+.lanes .who div:nth-child(4) { color: var(--pass); }
+.lanes .what > li { padding: 18px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.lanes .who div + div, .lanes .what > li + li { border-left: 1px solid var(--ink); }
+.lanes .what b { font-family: var(--anno); font-size: 12px; color: var(--ink-2); }
+.lanes .what h3 { font-size: 1.15rem; }
+.lanes .what p { font-size: 15px; color: var(--ink-2); }
+@media (max-width: 760px) { .lanes .who { display: none; } .lanes .what { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .lanes .what > li:nth-child(3) { border-left: 0; } .lanes .what > li:nth-child(n+3) { border-top: 1px solid var(--ink); } .lanes .what .lane-who { display: block; } }
+.lane-who { display: none; font-family: var(--anno); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--cad); }
+.never { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; margin-top: 28px; }
+.never p { padding: 14px 18px 14px 0; font-weight: 600; display: flex; gap: 10px; align-items: baseline; }
+.never p + p { padding-left: 18px; border-left: 1px solid var(--rule); }
+.never svg { flex: none; width: 13px; height: 13px; transform: translateY(1px); }
+@media (max-width: 760px) { .never { grid-template-columns: minmax(0, 1fr); } .never p + p { border-left: 0; padding-left: 0; border-top: 1px solid var(--rule); } }
+.tablewrap { overflow-x: auto; margin-top: 44px; }
+table.ready { width: 100%; border-collapse: collapse; min-width: 640px; font-size: 15px; }
+table.ready caption { text-align: left; font-family: var(--display); font-stretch: 106%; font-weight: 680; font-size: 1.2rem; margin-bottom: 12px; }
+table.ready th { text-align: left; font-family: var(--anno); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); font-weight: 400; padding: 10px 14px 10px 0; border-bottom: 1.5px solid var(--ink); }
+table.ready td { padding: 12px 14px 12px 0; border-bottom: 1px solid var(--rule); vertical-align: top; color: var(--ink-2); }
+table.ready td:first-child { color: var(--ink); font-weight: 600; }
+.states { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 14px; color: var(--ink-2); }
+.states span { border: 1px solid var(--rule); padding: 4px 9px; background: var(--sheet); }
+.states i { font-style: normal; color: var(--rule); }
+
+/* Packs */
+.packs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1.5px solid var(--ink); border-left: 1px solid var(--rule); }
+.pack { padding: 24px 22px; border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 4px 16px; align-content: start; }
+.pack svg { grid-row: span 2; width: 48px; height: 48px; }
+.pack h3 { font-size: 1.1rem; }
+.pack p { color: var(--ink-2); font-size: 15px; }
+.pack.first { background: var(--sheet); }
+.pack .first-tag { grid-column: 2; font-family: var(--anno); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--cad); margin-top: 6px; }
+@media (max-width: 860px) { .packs { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+@media (max-width: 520px) { .packs { grid-template-columns: minmax(0, 1fr); } }
+.footnote { margin-top: 18px; font-size: 14px; color: var(--ink-2); max-width: 74ch; }
+
+/* Calculator */
+.calc { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(24px, 4vw, 56px); align-items: start; }
+.inputs { display: grid; gap: 20px; border: 1.5px solid var(--ink); background: var(--sheet); padding: 22px; }
+.field { display: grid; gap: 8px; }
+.field label { display: flex; justify-content: space-between; gap: 10px; font-weight: 600; font-size: 15px; }
+.field output { font-family: var(--anno); font-size: 13px; color: var(--cad); font-variant-numeric: tabular-nums; }
+.field input[type=range] { width: 100%; accent-color: var(--cad); }
+.field small { color: var(--ink-2); font-size: 13px; }
+.results { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1.5px solid var(--ink); }
+.results div { padding: 16px 16px 16px 0; display: grid; gap: 4px; align-content: start; min-width: 0; }
+.results div + div { padding-left: 16px; border-left: 1px solid var(--rule); }
+.results b { font-family: var(--display); font-stretch: 112%; font-weight: 760; font-size: clamp(1.7rem, 3.2vw, 2.5rem); line-height: 1.05; font-variant-numeric: tabular-nums; }
+.results span { font-size: 14px; color: var(--ink-2); }
+.formula { font-family: var(--anno); font-size: 12px; color: var(--ink-2); margin-top: 10px; overflow-wrap: anywhere; }
+.chart { margin-top: 34px; }
+.chart h3 { font-size: 1.12rem; margin-bottom: 4px; }
+.chart > p { font-size: 14px; color: var(--ink-2); margin-bottom: 14px; }
+.bars { display: grid; gap: 8px; position: relative; }
+.bar { display: grid; grid-template-columns: minmax(130px, 34%) minmax(0, 1fr) 56px; gap: 12px; align-items: center; font-size: 14.5px; cursor: default; }
+.bar .track { height: 16px; position: relative; }
+.bar .fillbar { height: 100%; background: var(--cad); border-radius: 0 4px 4px 0; transition: opacity .15s; }
+.bar:hover .fillbar, .bar:focus-visible .fillbar { opacity: .75; }
+.bar .v { font-family: var(--anno); font-size: 12px; text-align: right; font-variant-numeric: tabular-nums; }
+.bar .lbl { min-width: 0; }
+.axis { display: grid; grid-template-columns: minmax(130px, 34%) minmax(0, 1fr) 56px; gap: 12px; font-family: var(--anno); font-size: 10px; color: var(--ink-2); }
+.axis div:nth-child(2) { display: flex; justify-content: space-between; border-top: 1px solid var(--rule); padding-top: 4px; }
+.tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--paper); font-size: 13px; padding: 7px 10px; border-radius: 3px; white-space: nowrap; z-index: 5; }
+.chart .total { margin-top: 14px; font-size: 14.5px; }
+@media (max-width: 900px) { .calc { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 520px) { .results { grid-template-columns: minmax(0, 1fr); } .results div + div { padding-left: 0; border-left: 0; border-top: 1px solid var(--rule); } .bar, .axis { grid-template-columns: 110px minmax(0, 1fr) 44px; gap: 8px; } }
+
+/* Today + roadmap */
+.today { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(24px, 4vw, 56px); align-items: start; }
+.counts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1.5px solid var(--ink); }
+.counts div { padding: 14px 14px 14px 0; display: grid; gap: 2px; }
+.counts div + div { padding-left: 14px; border-left: 1px solid var(--rule); }
+.counts b { font-family: var(--display); font-stretch: 112%; font-weight: 760; font-size: 2.2rem; line-height: 1.05; font-variant-numeric: tabular-nums; }
+.counts span { font-size: 14px; color: var(--ink-2); }
+.pilots { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.pilot { border: 1.5px solid var(--ink); background: var(--sheet); padding: 18px; display: grid; gap: 8px; align-content: start; }
+.pilot .anno { color: var(--pass); }
+.pilot ul { margin: 4px 0 0; padding-left: 18px; color: var(--ink-2); font-size: 15px; display: grid; gap: 3px; }
+.caveat { font-size: 14px; color: var(--ink-2); margin-top: 14px; }
+@media (max-width: 900px) { .today { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 560px) { .pilots { grid-template-columns: minmax(0, 1fr); } }
+.road { margin-top: clamp(48px, 6vw, 72px); }
+.road ol { list-style: none; margin: 18px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; }
+.road ol > li { padding: 26px 22px 0 0; position: relative; display: grid; gap: 8px; align-content: start; }
+.road ol > li + li { padding-left: 22px; }
+.road ol > li::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--rule); }
+.road ol > li:first-child::before { background: var(--cad); }
+.road .when { font-family: var(--anno); font-size: 12px; color: var(--cad); font-weight: 700; }
+.road ul { margin: 0; padding-left: 18px; color: var(--ink-2); font-size: 15px; display: grid; gap: 4px; }
+@media (max-width: 760px) { .road ol { grid-template-columns: 1fr; row-gap: 26px; } .road ol > li + li { padding-left: 0; } }
+
+/* Partners */
+.partner { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(24px, 4vw, 56px); align-items: start; }
+.wf { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; border-top: 1.5px solid var(--ink); }
+.wf li { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--rule); }
+.wf b { font-family: var(--anno); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--cad); padding-top: 4px; }
+.wf h3 { font-size: 1.1rem; }
+.wf p { color: var(--ink-2); font-size: 15px; }
+.measures { margin-top: 22px; display: grid; gap: 10px; }
+.measures div { display: flex; flex-wrap: wrap; gap: 8px; }
+.measures div span { border: 1px solid var(--ink); padding: 5px 10px; font-size: 14px; font-weight: 600; background: var(--sheet); }
+.origin { margin-top: 28px; border-left: 2px solid var(--cad); padding-left: 14px; display: grid; gap: 6px; font-size: 15px; color: var(--ink-2); max-width: 60ch; }
+.origin b { color: var(--ink); }
+form.apply { border: 1.5px solid var(--ink); background: var(--sheet); padding: 24px; display: grid; gap: 14px; }
+form.apply h3 { font-size: 1.25rem; }
+.f2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 520px) { .f2 { grid-template-columns: minmax(0, 1fr); } }
+.fi { display: grid; gap: 6px; min-width: 0; }
+.fi label { font-size: 14px; font-weight: 600; }
+.fi input, .fi select, .fi textarea { font: 400 16px/1.4 var(--body); color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 2px; padding: 10px 12px; width: 100%; }
+.fi input:focus, .fi select:focus, .fi textarea:focus { outline: 2px solid var(--cad); outline-offset: 0; border-color: var(--cad); }
+.fi textarea { min-height: 96px; resize: vertical; }
+.hp { position: absolute; left: -9999px; }
+.form-msg { font-size: 14.5px; min-height: 1.4em; }
+.form-msg.ok { color: var(--pass); font-weight: 600; }
+.form-msg.err { color: var(--redline); }
+.mailline { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 14.5px; color: var(--ink-2); }
+.mailline code { font-family: var(--anno); font-size: 13px; color: var(--ink); user-select: all; }
+@media (max-width: 900px) { .partner { grid-template-columns: minmax(0, 1fr); } }
+
+/* FAQ */
+.faq { display: grid; border-top: 1.5px solid var(--ink); max-width: 880px; }
+.faq details { border-bottom: 1px solid var(--rule); }
+.faq summary { cursor: pointer; list-style: none; padding: 18px 40px 18px 0; position: relative; font-family: var(--display); font-stretch: 104%; font-weight: 640; font-size: 1.12rem; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: ""; position: absolute; right: 8px; top: 50%; width: 12px; height: 12px; border-right: 2px solid var(--ink); border-bottom: 2px solid var(--ink); transform: translateY(-70%) rotate(45deg); transition: transform .2s; }
+.faq details[open] summary::after { transform: translateY(-30%) rotate(-135deg); }
+.faq details p { padding: 0 0 20px; color: var(--ink-2); max-width: 70ch; }
+
+/* Footer */
+.foot { border-top: 1.5px solid var(--ink); padding-block: 40px 48px; }
+.foot .wrap { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px 40px; align-items: start; }
+.foot .brand-lockup img { height: 44px; }
+.foot p { color: var(--ink-2); font-size: 14px; max-width: 62ch; }
+.foot nav { display: flex; flex-wrap: wrap; gap: 10px 22px; font-size: 15px; }
+.foot nav a { color: var(--ink); text-decoration: none; }
+.foot nav a:hover { color: var(--cad); }
+.foot .legal { grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; border-top: 1px solid var(--rule); padding-top: 18px; font-size: 13px; color: var(--ink-2); }
+@media (max-width: 700px) { .foot .wrap { grid-template-columns: minmax(0, 1fr); } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="4ENG home">{{LOGO}}</a>
+    <button class="btn btn-sm menu-btn" type="button" id="menuBtn" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav class="nav" id="nav" aria-label="Main">
+      <a href="#platform">Platform</a>
+      <a href="#skills">Skills</a>
+      <a href="#change">Change impact</a>
+      <a href="#trust">Trust</a>
+      <a href="#capacity">Capacity</a>
+      <a href="#roadmap">Roadmap</a>
+      <a class="btn btn-sm nav-partner" href="#partners">Become a design partner</a>
+    </nav>
+    <a class="btn btn-sm btn-primary signup" href="{{APP}}">Sign up</a>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- HERO -->
+<section class="hero" id="top" aria-labelledby="h1">
+  <div class="wrap">
+    <h1 id="h1">More engineering. Every deliverable connected.</h1>
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <p class="lead">4ENG is the AI execution platform for engineering firms. It carries one approved engineering model from requirements to reviewed drawings, control code and handover evidence, so your engineers stop retyping the same data into every deliverable.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="{{APP}}">Sign up for 4ENG</a>
+          <a class="btn" href="#partners">Join the design-partner programme</a>
+        </div>
+        <p class="note">4ENG is in active development. The drawing and multidiscipline workflows on this page are proposed capabilities, validated with design partners before release.</p>
+      </div>
+
+      <figure class="fig">
+        <div class="frame">
+          <div class="zones-x" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span></div>
+          <div class="zones-y" aria-hidden="true"><span>A</span><span>B</span><span>C</span><span>D</span></div>
+          <div class="scroll-x">
+          <svg id="pkg" class="dw min560" viewBox="0 0 760 496" role="img" aria-labelledby="pkgT pkgD">
+            <title id="pkgT">One request becomes one coordinated engineering package</title>
+            <desc id="pkgD">A request to prepare the reviewed design package for an approved pumping skid flows into a shared engineering model. The model feeds six deliverables: loop and wiring drawings, panel and skid general arrangement, P&amp;ID and schedules, PLC and SCADA package, BOM and test procedures, and review and issue evidence. Each is generated, validated, has exceptions resolved and waits for human approval before issue.</desc>
+            <defs>
+              <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" class="fill-ink"/></marker>
+              <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" class="fill-paper"/><line x1="0" y1="0" x2="0" y2="6" stroke="currentColor" style="stroke:var(--ink-2)" stroke-width="1"/></pattern>
+            </defs>
+
+            <!-- request -->
+            <g>
+              <rect x="220" y="14" width="320" height="78" class="pp"/>
+              <text x="234" y="34" class="t2">REQUEST</text>
+              <text x="526" y="34" class="t2" text-anchor="end">SKID-100</text>
+              <text class="tbody"><tspan id="rq1" x="234" y="58">Prepare the reviewed design package</tspan><tspan id="rq2" x="234" y="78">for this approved pumping skid.</tspan></text>
+            </g>
+            <line x1="380" y1="92" x2="380" y2="190" class="ln draw" pathLength="1" marker-end="url(#arr)"/>
+
+            <!-- shared model -->
+            <g id="model">
+              <circle cx="380" cy="268" r="72" class="dash"/>
+              <circle cx="380" cy="268" r="72" class="model-ring" id="ring"/>
+              <g class="ln2">
+                <line x1="380" y1="252" x2="380" y2="235"/><line x1="396" y1="268" x2="413" y2="268"/>
+                <line x1="380" y1="284" x2="380" y2="303"/><line x1="364" y1="268" x2="347" y2="268"/>
+              </g>
+              <circle cx="380" cy="268" r="16" class="pp"/>
+              <path d="M380 252H402M371 282L366 291H394L389 282" class="ln"/>
+              <text x="380" y="272" text-anchor="middle" class="t" style="font-size:8px">P-101</text>
+              <circle cx="380" cy="224" r="11" class="pp"/><text x="380" y="222" text-anchor="middle" class="t" style="font-size:7px">PT</text><text x="380" y="230" text-anchor="middle" class="t" style="font-size:7px">101</text>
+              <circle cx="424" cy="268" r="11" class="pp"/><text x="424" y="271.5" text-anchor="middle" class="tb" style="font-size:9px">M</text>
+              <path d="M370 307L390 319V307L370 319Z" class="pp"/>
+              <rect x="326" y="261" width="20" height="14" class="pp"/><text x="336" y="271" text-anchor="middle" class="t" style="font-size:7px">JB</text>
+              <text x="380" y="360" text-anchor="middle" class="tb">Shared engineering model</text>
+              <text x="380" y="375" text-anchor="middle" class="t2">Stable object IDs across disciplines</text>
+            </g>
+
+            <!-- wiring buses -->
+            <g id="wires">
+              <path class="wire draw" pathLength="1" d="M308 268H236"/>
+              <path class="wire draw" pathLength="1" d="M236 158V378"/>
+              <path class="wire draw" pathLength="1" d="M236 158H176M236 268H176M236 378H176"/>
+              <path class="wire draw" pathLength="1" d="M452 268H524"/>
+              <path class="wire draw" pathLength="1" d="M524 158V378"/>
+              <path class="wire draw" pathLength="1" d="M524 158H584M524 268H584M524 378H584"/>
+              <circle cx="236" cy="158" r="3" class="jdot"/><circle cx="236" cy="268" r="3" class="jdot"/><circle cx="236" cy="378" r="3" class="jdot"/>
+              <circle cx="524" cy="158" r="3" class="jdot"/><circle cx="524" cy="268" r="3" class="jdot"/><circle cx="524" cy="378" r="3" class="jdot"/>
+            </g>
+
+            <!-- deliverable sheets (160 x 104) -->
+            <g class="dl" id="dl-loop" transform="translate(16 106)">
+              <rect width="160" height="104" class="pp"/>
+              <g class="art">
+                <circle cx="22" cy="34" r="9" class="ln draw" pathLength="1"/>
+                <path d="M31 28H136M31 40H136" class="ln draw" pathLength="1"/>
+                <rect x="66" y="25" width="6" height="6" class="pp"/><rect x="66" y="37" width="6" height="6" class="pp"/>
+                <rect x="104" y="25" width="6" height="6" class="pp"/><rect x="104" y="37" width="6" height="6" class="pp"/>
+                <rect x="136" y="18" width="14" height="32" class="ln draw" pathLength="1"/>
+                <text x="69" y="60" text-anchor="middle" class="t2" style="font-size:7px">JB-101</text><text x="107" y="60" text-anchor="middle" class="t2" style="font-size:7px">MC-101</text>
+                <path class="red exc-cloud" id="excCloud" d="{{CLOUD:97,32,20,16,4}}"/>
+              </g>
+              <line x1="0" y1="68" x2="160" y2="68" class="ln"/>
+              <text x="8" y="82" class="t" style="font-size:9.5px;font-family:var(--body);font-weight:600">Loop / wiring drawings</text>
+              <g class="chip st-ready" transform="translate(8 88)"><rect width="103" height="12" rx="2"/><text x="5" y="8.8">READY FOR APPROVAL</text></g>
+            </g>
+
+            <g class="dl" id="dl-ga" transform="translate(16 216)">
+              <rect width="160" height="104" class="pp"/>
+              <g class="art">
+                <rect x="14" y="8" width="132" height="54" class="ln draw" pathLength="1"/>
+                <path d="M18 22H142M18 40H142" class="ln2 draw" pathLength="1"/>
+                <rect x="22" y="15" width="16" height="14" class="pp"/><rect x="41" y="15" width="12" height="14" class="pp"/><rect x="56" y="15" width="8" height="14" class="pp"/><rect x="66" y="15" width="8" height="14" class="pp"/><rect x="76" y="15" width="8" height="14" class="pp"/><rect x="86" y="15" width="8" height="14" class="pp"/>
+                <rect x="22" y="34" width="60" height="11" class="pp"/>
+                <rect x="18" y="50" width="124" height="7" class="hatch"/>
+              </g>
+              <line x1="0" y1="68" x2="160" y2="68" class="ln"/>
+              <text x="8" y="82" class="t" style="font-size:9.5px;font-family:var(--body);font-weight:600">Panel / skid GA</text>
+              <g class="chip st-ready" transform="translate(8 88)"><rect width="103" height="12" rx="2"/><text x="5" y="8.8">READY FOR APPROVAL</text></g>
+            </g>
+
+            <g class="dl" id="dl-pid" transform="translate(16 326)">
+              <rect width="160" height="104" class="pp"/>
+              <g class="art">
+                <circle cx="34" cy="42" r="10" class="ln draw" pathLength="1"/>
+                <path d="M34 32H52V42H92M106 42H146" class="ln draw" pathLength="1"/>
+                <path d="M92 36L106 48V36L92 48Z" class="pp"/>
+                <circle cx="70" cy="20" r="7" class="ln draw" pathLength="1"/>
+                <path d="M70 27V42" class="dash"/>
+                <path d="M118 12H146M118 18H146M118 24H140" class="lt"/>
+              </g>
+              <line x1="0" y1="68" x2="160" y2="68" class="ln"/>
+              <text x="8" y="82" class="t" style="font-size:9.5px;font-family:var(--body);font-weight:600">P&amp;ID / schedules</text>
+              <g class="chip st-ready" transform="translate(8 88)"><rect width="103" height="12" rx="2"/><text x="5" y="8.8">READY FOR APPROVAL</text></g>
+            </g>
+
+            <g class="dl" id="dl-plc" transform="translate(584 106)">
+              <rect width="160" height="104" class="pp"/>
+              <g class="art">
+                <path d="M16 8V60M144 8V60" class="ln draw" pathLength="1"/>
+                <path d="M16 20H50M56 20H86M92 20H118M130 20H144M16 38H50M56 38H118M130 38H144M16 54H86M92 54H118M130 54H144" class="ln2 draw" pathLength="1"/>
+                <path d="M50 14V26M56 14V26M86 14V26M92 14V26M50 32V44M56 32V44M86 48V60M92 48V60" class="ln"/>
+                <circle cx="124" cy="20" r="6" class="ln"/><circle cx="124" cy="38" r="6" class="ln"/><circle cx="124" cy="54" r="6" class="ln"/>
+              </g>
+              <line x1="0" y1="68" x2="160" y2="68" class="ln"/>
+              <text x="8" y="82" class="t" style="font-size:9.5px;font-family:var(--body);font-weight:600">PLC / SCADA package</text>
+              <g class="chip st-ready" transform="translate(8 88)"><rect width="103" height="12" rx="2"/><text x="5" y="8.8">READY FOR APPROVAL</text></g>
+            </g>
+
+            <g class="dl" id="dl-bom" transform="translate(584 216)">
+              <rect width="160" height="104" class="pp"/>
+              <g class="art">
+                <path d="M14 10H146M14 22H146M14 34H146M14 46H146M14 58H146" class="lt"/>
+                <path d="M40 10V58M110 10V58" class="lt"/>
+                <path d="M20 16H34M20 28H32M20 40H34M20 52H30M46 16H96M46 28H88M46 40H100M46 52H80" class="ln2"/>
+                <path d="M120 16L124 19L131 12M120 28L124 31L131 24M120 40L124 43L131 36M120 52L124 55L131 48" class="ok draw" pathLength="1"/>
+              </g>
+              <line x1="0" y1="68" x2="160" y2="68" class="ln"/>
+              <text x="8" y="82" class="t" style="font-size:9.5px;font-family:var(--body);font-weight:600">BOM / test procedures</text>
+              <g class="chip st-ready" transform="translate(8 88)"><rect width="103" height="12" rx="2"/><text x="5" y="8.8">READY FOR APPROVAL</text></g>
+            </g>
+
+            <g class="dl" id="dl-ev" transform="translate(584 326)">
+              <rect width="160" height="104" class="pp"/>
+              <g class="art">
+                <path d="M14 14H80M14 24H86M14 34H70M14 44H84M14 54H60" class="ln2"/>
+                <g class="stamp" id="stamp">
+                  <circle cx="120" cy="34" r="22" class="acc"/><circle cx="120" cy="34" r="17" class="acc" style="stroke-width:1"/>
+                  <text x="120" y="32" text-anchor="middle" style="fill:var(--cad);font-size:8px;font-weight:700">ISSUED</text>
+                  <text x="120" y="42" text-anchor="middle" style="fill:var(--cad);font-size:7px">REV A</text>
+                </g>
+              </g>
+              <line x1="0" y1="68" x2="160" y2="68" class="ln"/>
+              <text x="8" y="82" class="t" style="font-size:9.5px;font-family:var(--body);font-weight:600">Review / issue evidence</text>
+              <g class="chip st-ready" transform="translate(8 88)"><rect width="103" height="12" rx="2"/><text x="5" y="8.8">READY FOR APPROVAL</text></g>
+            </g>
+
+            <!-- stepper -->
+            <g id="stepper">
+              <line x1="60" y1="458" x2="700" y2="458" class="lt"/>
+              <g class="step done" data-i="0"><circle cx="60" cy="458" r="8"/><text x="60" y="483">Generate</text></g>
+              <g class="step done" data-i="1"><circle cx="220" cy="458" r="8"/><text x="220" y="483">Validate</text></g>
+              <g class="step done" data-i="2"><circle cx="380" cy="458" r="8"/><text x="380" y="483">Resolve exceptions</text></g>
+              <g class="step on" data-i="3"><circle cx="540" cy="458" r="8"/><text x="540" y="483">Approve</text></g>
+              <g class="step" data-i="4"><circle cx="700" cy="458" r="8"/><text x="700" y="483">Issue</text></g>
+            </g>
+          </svg>
+          </div>
+          <div class="frame-foot">
+            <p class="caption" id="pkgCaption" aria-live="polite">Six deliverables generated from one model and checked. Nothing is issued until an engineer approves it.</p>
+            <div class="actions">
+              <button class="btn btn-sm btn-primary" type="button" id="approveBtn">Approve and issue</button>
+              <button class="btn btn-sm" type="button" id="replayBtn">Replay</button>
+            </div>
+          </div>
+          <div class="tb-grid" aria-hidden="true">
+            <div><small>Drawing</small><b>Coordinated package</b></div>
+            <div><small>Sheet</small><b>01 of 12</b></div>
+            <div><small>Rev</small><b>02</b></div>
+            <div><small>Status</small><b>Concept</b></div>
+          </div>
+        </div>
+        <figcaption class="sr">Concept animation of the 4ENG workflow. Illustrative, not a released product screen.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="sheet" id="problem" aria-labelledby="h-problem">
+  <div class="wrap">
+    <div class="sheet-head">
+      <div>
+        <h2 id="h-problem">Engineering effort is lost between deliverables.</h2>
+        <p class="lead">The same requirement is read, retyped and rechecked for every discipline. A motor rating lives in a datasheet, a load list, a cable schedule and a starter BOM. When it changes, someone has to find every copy.</p>
+      </div>
+      <div class="tblock"><span>Sheet 02</span><span>Context</span></div>
+    </div>
+
+    <figure class="fig">
+      <div class="scroll-x">
+      <svg class="dw min560" viewBox="0 0 760 214" role="img" aria-labelledby="probT">
+        <title id="probT">One motor, four documents, two different ratings. The cable schedule and starter BOM still carry the old 55 kW rating after an approved uprate to 75 kW.</title>
+        {{DOC:10,Motor datasheet,DS-M101 Rev C,Tag|M-101,Rated power|75 kW,Voltage|415 V,Frame|280S,0}}
+        {{DOC:200,Electrical load list,LL-01 Rev D,Tag|M-101,Absorbed load|75 kW,Supply|MCC-03,Duty|Continuous,0}}
+        {{DOC:390,Cable schedule,CS-02 Rev B,Cable|C-M101,Sized for|55 kW,Size|3C x 35 mm²,Route|TR-04,1}}
+        {{DOC:580,Starter BOM,MCC-03 Rev A,Feeder|F-07,Starter|55 kW DOL,Overload|90-120 A,Contactor|AC-3 115 A,1}}
+      </svg>
+      </div>
+      <figcaption>Example: an approved uprate from 55 kW to 75 kW reached two of four documents. Revision clouds mark the values nobody caught.</figcaption>
+    </figure>
+
+    <ol class="rcycle" aria-label="Where the effort goes">
+      <li><span class="k">1 Reinterpret</span><h3>Read it again</h3><p>Each discipline reads the same requirement and extracts what it needs.</p></li>
+      <li><span class="k">2 Recreate</span><h3>Rebuild it</h3><p>Familiar drawings and schedules are redrawn, renumbered and rebuilt.</p></li>
+      <li><span class="k">3 Reconcile</span><h3>Find conflicts</h3><p>Engineers hunt for inconsistent tags, dimensions and revisions by hand.</p></li>
+      <li><span class="k">4 Reissue</span><h3>Check it all again</h3><p>Affected outputs are rechecked and the evidence is assembled for release.</p></li>
+    </ol>
+    <p class="statement">4ENG carries the engineering context forward, so engineers no longer have to reconstruct it.</p>
+  </div>
+</section>
+
+<!-- PLATFORM -->
+<section class="sheet" id="platform" aria-labelledby="h-platform">
+  <div class="wrap">
+    <div class="sheet-head">
+      <div>
+        <h2 id="h-platform">One platform. Three engines of engineering productivity.</h2>
+        <p class="lead">Keep the business platform your projects already run on. Add a connected engineering production layer, so engineering output stays tied to the project, the customer promise and the people accountable for it.</p>
+      </div>
+      <div class="tblock"><span>Sheet 03</span><span class="s-prop">Proposed</span></div>
+    </div>
+    <div class="elev">
+      <article class="engine">
+        <span class="name">Work Operations</span>
+        <h3 class="role">Run the firm</h3>
+        <ul><li>Projects, My Work and timesheets</li><li>Leads, proposals and sourcing</li><li>Quality, documents and service</li></ul>
+      </article>
+      <article class="engine mid">
+        <span class="name">Engineering Studio</span>
+        <h3 class="role">Engineer the asset</h3>
+        <ul><li>Tags, equipment and connections</li><li>Models, drawings and schedules</li><li>Deliverables with revision history</li></ul>
+      </article>
+      <article class="engine">
+        <span class="name">Skill Factory</span>
+        <h3 class="role">Scale expertise</h3>
+        <ul><li>Reusable, versioned engineering methods</li><li>Tool adapters and validation</li><li>Approvals and evidence</li></ul>
+      </article>
+    </div>
+    <div class="slab"><span class="anno">Shared foundation</span><span>Shared identity</span><span>Project context</span><span>Revision control</span><span>Governed execution</span></div>
+  </div>
+</section>
+
+<!-- ASSET MODEL -->
+<section class="sheet" id="model-section" aria-labelledby="h-asset">
+  <div class="wrap">
+    <div class="sheet-head">
+      <div>
+        <h2 id="h-asset">A drawing is a view. The asset is the intelligence.</h2>
+        <p class="lead">Every deliverable reads from stable object identities, so disciplines stay connected without pretending one file format can hold everything. Select part of pump P-101 to see which deliverables depend on it.</p>
+      </div>
+      <div class="tblock"><span>Sheet 04</span><span class="s-prop">Proposed</span></div>
+    </div>
+    <div class="asset">
+      <svg class="dw" id="assetSvg" viewBox="0 0 520 400" role="group" aria-label="P-101 pump asset and its six facets">
+        <g id="spokes">
+          <path class="spoke" data-f="duty" d="M260 200L118 62"/>
+          <path class="spoke" data-f="motor" d="M260 200L402 62"/>
+          <path class="spoke" data-f="nozzles" d="M260 200L70 200"/>
+          <path class="spoke" data-f="io" d="M260 200L450 200"/>
+          <path class="spoke" data-f="foundation" d="M260 200L118 338"/>
+          <path class="spoke" data-f="tests" d="M260 200L402 338"/>
+        </g>
+        <circle cx="260" cy="200" r="64" class="pp"/>
+        <circle cx="260" cy="194" r="24" class="ln"/>
+        <path d="M260 170H292M249 214L242 228H278L271 214" class="ln"/>
+        <text x="260" y="198" text-anchor="middle" class="tb" style="font-size:10px">P-101</text>
+        <text x="260" y="248" text-anchor="middle" class="t2">PUMP ASSET</text>
+        <g class="facet" tabindex="0" role="button" aria-pressed="false" data-f="duty"><rect x="40" y="38" width="156" height="48" rx="3"/><text x="54" y="59">Duty + datasheet</text><text x="54" y="75" class="fsub">FLOW, HEAD, FLUID</text></g>
+        <g class="facet" tabindex="0" role="button" aria-pressed="true" data-f="motor"><rect x="324" y="38" width="156" height="48" rx="3"/><text x="338" y="59">Motor + power cable</text><text x="338" y="75" class="fsub">M-101, C-M101</text></g>
+        <g class="facet" tabindex="0" role="button" aria-pressed="false" data-f="nozzles"><rect x="8" y="176" width="136" height="48" rx="3"/><text x="22" y="197">Nozzles + piping</text><text x="22" y="213" class="fsub">SUCTION, DISCHARGE</text></g>
+        <g class="facet" tabindex="0" role="button" aria-pressed="false" data-f="io"><rect x="376" y="176" width="136" height="48" rx="3"/><text x="390" y="197">I/O + control logic</text><text x="390" y="213" class="fsub">PT-101, RUN, TRIP</text></g>
+        <g class="facet" tabindex="0" role="button" aria-pressed="false" data-f="foundation"><rect x="40" y="314" width="156" height="48" rx="3"/><text x="54" y="335">Foundation + loads</text><text x="54" y="351" class="fsub">BASEPLATE, ANCHORS</text></g>
+        <g class="facet" tabindex="0" role="button" aria-pressed="false" data-f="tests"><rect x="324" y="314" width="156" height="48" rx="3"/><text x="338" y="335">Drawings + tests</text><text x="338" y="351" class="fsub">FAT, SAT, HANDOVER</text></g>
+      </svg>
+      <div>
+        <div class="views-head"><h3 id="viewsTitle">Deliverables using motor + power cable</h3><span class="anno num" id="viewsCount">5 of 14</span></div>
+        <ul class="views" id="views" aria-live="polite">
+          <li data-f="duty"><span>Process datasheet</span><span class="dot"></span></li>
+          <li data-f="nozzles duty io"><span>P&amp;ID</span><span class="dot"></span></li>
+          <li data-f="nozzles"><span>Line list</span><span class="dot"></span></li>
+          <li data-f="motor"><span>Electrical load list</span><span class="dot"></span></li>
+          <li data-f="motor io"><span>Cable schedule</span><span class="dot"></span></li>
+          <li data-f="motor"><span>Single-line diagram</span><span class="dot"></span></li>
+          <li data-f="motor io"><span>Motor starter schematic</span><span class="dot"></span></li>
+          <li data-f="nozzles foundation motor"><span>Skid general arrangement</span><span class="dot"></span></li>
+          <li data-f="foundation"><span>Foundation drawing</span><span class="dot"></span></li>
+          <li data-f="io"><span>Loop drawing PT-101</span><span class="dot"></span></li>
+          <li data-f="io"><span>PLC / SCADA tags</span><span class="dot"></span></li>
+          <li data-f="nozzles foundation"><span>Bill of materials</span><span class="dot"></span></li>
+          <li data-f="tests io duty"><span>FAT / SAT procedure</span><span class="dot"></span></li>
+          <li data-f="tests"><span>Handover record</span><span class="dot"></span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="sheet" id="skills" aria-labelledby="h-skills">
+  <div class="wrap">
+    <div class="sheet-head">
+      <div>
+        <h2 id="h-skills">A skill is a tested production method, not a prompt.</h2>
+        <p class="lead">The agent selects the skill. The skill binds approved knowledge, executable engineering tools and acceptance criteria, so every output is produced and checked the same way.</p>
+      </div>
+      <div class="tblock"><span>Sheet 05</span><span class="s-prop">Proposed</span></div>
+    </div>
+    <ol class="contract">
+      <li><span class="k">1</span><h3>Input contract</h3><p>Required data, units and source revisions. Missing inputs are flagged, never guessed.</p></li>
+      <li><span class="k">2</span><h3>Approved knowledge</h3><p>Your templates, design rules, typicals and vendor data.</p></li>
+      <li><span class="k">3</span><h3>Executable tools</h3><p>CAD, code, calculation and export engines do the engineering work.</p></li>
+      <li><span class="k">4</span><h3>Acceptance evidence</h3><p>Checks, reviews and an artifact manifest travel with every output.</p></li>
+    </ol>
+    <div class="life">
+      <ol aria-label="Skill lifecycle">
+        <li>Draft</li><li>Independently tested</li><li>Pilot</li><li>Approved</li><li>Versioned</li><li>Monitored</li>
+      </ol>
+      <p class="gate">AI may author and improve a skill. Independent tests and authorized people approve its use.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FLAGSHIPS -->
+<section class="sheet" id="flagship" aria-labelledby="h-flag">
+  <div class="wrap">
+    <div class="sheet-head">
+      <div>
+        <h2 id="h-flag">Start with the deliverables your teams produce in volume.</h2>
+        <p class="lead">The first skills target repeatable 2D outputs built from verified source data. Each drawing comes with its schedule and a validation report from the same approved source.</p>
+      </div>
+      <div class="tblock"><span>Sheet 06</span><span class="s-prop">Proposed</span></div>
+    </div>
+
+    <article class="flag">
+      <div class="flag-copy">
+        <h3>Loop drawings from a verified connection model</h3>
+        <ul class="io">
+          <li><b>Input</b><span>Tags, cables, terminals, I/O assignments and your approved loop typical</span></li>
+          <li><b>Generate</b><span>Editable drawing, PDF, termination and cross-reference schedules</span></li>
+          <li><b>Verify</b><span>Continuity, polarity, signal and card types, drawing references</span></li>
+        </ul>
+      </div>
+      <figure class="fig">
+        <div class="frame">
+          <div class="scroll-x">
+          <svg class="dw min560" viewBox="0 0 680 270" role="img" aria-labelledby="loopT">
+            <title id="loopT">Illustrative loop path: pressure transmitter PT-101 wired through cable C-101 to junction box JB-101 terminal strip TB-01, multicore MC-101 pair 01 to the marshalling cabinet, and on to analog input card AI-01 channel 03.</title>
+            <g class="dash"><path d="M150 14V236M330 14V236M510 14V236"/></g>
+            <text x="75" y="26" text-anchor="middle" class="t2">FIELD</text>
+            <text x="240" y="26" text-anchor="middle" class="t2">JUNCTION BOX</text>
+            <text x="420" y="26" text-anchor="middle" class="t2">MARSHALLING</text>
+            <text x="595" y="26" text-anchor="middle" class="t2">I/O CHANNEL</text>
+            <!-- instrument -->
+            <circle cx="62" cy="122" r="26" class="pp"/>
+            <line x1="36" y1="122" x2="88" y2="122" class="ln"/>
+            <text x="62" y="116" text-anchor="middle" class="tb">PT</text>
+            <text x="62" y="138" text-anchor="middle" class="t">101</text>
+            <text x="62" y="170" text-anchor="middle" class="t2">4-20 mA, 2-WIRE</text>
+            <!-- wires + and - -->
+            <path id="wplus" d="M88 108H214M226 108H394M406 108H574" class="ln"/>
+            <path id="wminus" d="M88 136H214M226 136H394M406 136H574" class="ln2"/>
+            <path class="sig" d="M88 108H574"/>
+            <text x="110" y="102" class="t2">+</text><text x="110" y="150" class="t2">−</text>
+            <text x="120" y="194" text-anchor="middle" class="t">C-101</text><text x="120" y="207" text-anchor="middle" class="t2">CORES 1 / 2</text>
+            <!-- JB terminal strip -->
+            <rect x="196" y="72" width="48" height="100" class="pp2"/>
+            <rect x="214" y="102" width="12" height="12" class="pp"/><rect x="214" y="130" width="12" height="12" class="pp"/>
+            <text x="230" y="112" class="t" style="font-size:8px">1</text><text x="230" y="140" class="t" style="font-size:8px">2</text>
+            <text x="220" y="66" text-anchor="middle" class="t">JB-101 / TB-01</text>
+            <text x="290" y="194" text-anchor="middle" class="t">MC-101</text><text x="290" y="207" text-anchor="middle" class="t2">PAIR 01</text>
+            <path d="M270 100V144" class="ln2" stroke-dasharray="2 3"/><text x="276" y="160" class="t2" style="font-size:7.5px">SCREEN</text>
+            <!-- marshalling -->
+            <rect x="376" y="72" width="48" height="100" class="pp2"/>
+            <rect x="394" y="102" width="12" height="12" class="pp"/><rect x="394" y="130" width="12" height="12" class="pp"/>
+            <text x="400" y="66" text-anchor="middle" class="t">MC-101 / TB-M3</text>
+            <text x="455" y="194" text-anchor="middle" class="t2">PREFAB CABLE</text>
+            <!-- IO card -->
+            <rect x="574" y="64" width="72" height="118" class="pp"/>
+            <text x="610" y="84" text-anchor="middle" class="tb">AI-01</text>
+            <text x="610" y="100" text-anchor="middle" class="t2">CH 03</text>
+            <circle cx="586" cy="108" r="3" class="fill-ink"/><circle cx="586" cy="136" r="3" class="fill-ink"/>
+            <text x="596" y="111" class="t" style="font-size:8px">IN+</text><text x="596" y="139" class="t" style="font-size:8px">IN−</text>
+            <text x="610" y="166" text-anchor="middle" class="t2">24 V DC</text>
+            <!-- title strip -->
+            <line x1="10" y1="236" x2="670" y2="236" class="ln"/>
+            <text x="14" y="256" class="t2">ILLUSTRATIVE LOGICAL PATH, NOT A RELEASED CIRCUIT</text>
+            <text x="666" y="256" text-anchor="end" class="t">LD-PT-101</text>
+          </svg>
+          </div>
+          <div class="checks" aria-label="Automated checks">
+            <span>{{TICK}}Continuity</span><span>{{TICK}}Polarity</span><span>{{TICK}}Signal and card type</span><span>{{TICK}}References</span>
+          </div>
+          <p class="hold"><b>Engineer hold</b><span>Power, shielding, barriers and grounding are resolved by a qualified engineer before issue.</span></p>
+        </div>
+      </figure>
+    </article>
+
+    <article class="flag">
+      <div class="flag-copy">
+        <h3>Panel general arrangements that obey engineering constraints</h3>
+        <ul class="io">
+          <li><b>Constrain</b><span>Real component footprints, access, heat and wiring segregation</span></li>
+          <li><b>Generate</b><span>Views, dimensions, cut-outs and the bill of materials</span></li>
+          <li><b>Verify</b><span>Collisions, clearances and interfaces against your rules</span></li>
+        </ul>
+      </div>
+      <figure class="fig">
+        <div class="frame">
+          <div class="scroll-x">
+          <svg class="dw min560" viewBox="0 0 680 300" role="img" aria-labelledby="gaT">
+            <title id="gaT">Illustrative panel mounting-plate layout with power supply, CPU and I/O modules on DIN rails, wire ducts, terminal row, overall dimensions and a heat clearance zone.</title>
+            <defs><marker id="dim" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1L10 5L0 9" class="ln" style="stroke-width:1.4"/></marker></defs>
+            <!-- plate -->
+            <rect x="60" y="40" width="440" height="210" class="pp"/>
+            <!-- ducts -->
+            <rect x="72" y="52" width="416" height="14" class="hatch"/>
+            <rect x="72" y="128" width="416" height="14" class="hatch"/>
+            <rect x="72" y="224" width="416" height="14" class="hatch"/>
+            <rect x="72" y="66" width="14" height="158" class="hatch"/>
+            <rect x="474" y="66" width="14" height="158" class="hatch"/>
+            <!-- rails -->
+            <line x1="92" y1="98" x2="468" y2="98" class="ln2"/>
+            <line x1="92" y1="186" x2="468" y2="186" class="ln2"/>
+            <!-- modules rail 1 -->
+            <rect x="98" y="74" width="62" height="48" class="pp"/><text x="129" y="102" text-anchor="middle" class="tb">PSU</text>
+            <rect x="166" y="74" width="54" height="48" class="pp" style="stroke:var(--cad);stroke-width:1.8"/><text x="193" y="102" text-anchor="middle" class="tb" style="fill:var(--cad)">CPU</text>
+            <g class="t"><rect x="226" y="74" width="26" height="48" class="pp"/><rect x="256" y="74" width="26" height="48" class="pp"/><rect x="286" y="74" width="26" height="48" class="pp"/><rect x="316" y="74" width="26" height="48" class="pp"/></g>
+            <text x="284" y="70" text-anchor="middle" class="t2">I/O x4</text>
+            <!-- heat zone -->
+            <rect x="350" y="70" width="112" height="56" class="dash" style="stroke:var(--redline)"/>
+            <text x="406" y="94" text-anchor="middle" class="red-t">HEAT CLEARANCE</text><text x="406" y="108" text-anchor="middle" class="t2">50 MM ABOVE / BELOW</text>
+            <!-- rail 2 terminals + breakers -->
+            <g><rect x="98" y="166" width="14" height="40" class="pp"/><rect x="114" y="166" width="14" height="40" class="pp"/><rect x="130" y="166" width="14" height="40" class="pp"/><rect x="146" y="166" width="14" height="40" class="pp"/></g>
+            <text x="129" y="218" text-anchor="middle" class="t2">MCB</text>
+            <g class="ln2" id="terms">{{TERMS}}</g>
+            <text x="330" y="218" text-anchor="middle" class="t2">TERMINALS X1</text>
+            <!-- dimensions -->
+            <path d="M60 268H500" class="ln2" marker-start="url(#dim)" marker-end="url(#dim)"/>
+            <path d="M60 254V276M500 254V276" class="lt"/>
+            <text x="280" y="284" text-anchor="middle" class="t">800</text>
+            <path d="M530 40V250" class="ln2" marker-start="url(#dim)" marker-end="url(#dim)"/>
+            <path d="M508 40H540M508 250H540" class="lt"/>
+            <text x="548" y="150" class="t">600</text>
+            <text x="590" y="60" class="t2">MOUNTING</text><text x="590" y="74" class="t2">PLATE MP-01</text>
+            <text x="590" y="102" class="t2">SCALE 1:10</text>
+            <text x="590" y="130" class="t2">DIMS IN MM</text>
+            <text x="590" y="240" class="t2">ILLUSTRATIVE</text>
+          </svg>
+          </div>
+          <div class="checks" aria-label="Automated checks">
+            <span>{{TICK}}No collisions</span><span>{{TICK}}Clearances</span><span>{{TICK}}Segregation</span><span>{{TICK}}BOM matches layout</span>
+          </div>
+          <p class="hold"><b>Engineer hold</b><span>Thermal design, short-circuit rating and certification remain with the responsible electrical lead.</span></p>
+        </div>
+      </figure>
+    </article>
+  </div>
+</section>
+
+<!-- CHANGE IMPACT -->
+<section class="sheet" id="change" aria-labelledby="h-change">
+  <div class="wrap">
+    <div class="sheet-head">
+      <div>
+        <h2 id="h-change">Change one requirement. Review every affected deliverable.</h2>
+        <p class="lead">When an approved motor rating changes, 4ENG prepares the impact across disciplines for review. It shows the delta and marks what is stale. It never overwrites issued work.</p>
+      </div>
+      <div class="tblock"><span>Sheet 07</span><span class="s-prop">Proposed</span></div>
+    </div>
+    <div class="impact">
+      <div class="source">
+        <span class="tag">M-101 / RATED POWER</span>
+        <div class="rating num"><span class="old" id="oldVal" hidden>55</span><span id="newVal">55</span><span class="unit">kW</span></div>
+        <span class="delta" id="delta">Proposed change: 55 kW to 75 kW</span>
+        <div class="btns">
+          <button class="btn btn-primary" type="button" id="chgApprove">Approve the change</button>
+          <button class="btn" type="button" id="chgRegen" disabled>Regenerate under control</button>
+        </div>
+        <button class="btn btn-sm" type="button" id="chgReset" hidden>Reset demo</button>
+        <p class="log" id="chgLog" aria-live="polite">Approve the change to see which deliverables 4ENG marks for review.</p>
+      </div>
+      <div class="disc" id="disc">
+        <article class="dcard" data-lead="Electrical lead">
+          <header><h3>Electrical</h3><span class="anno">4 items</span></header>
+          <ul><li>Load list LL-01<span class="state">Issued</span></li><li>Cable C-M101 sizing<span class="state">Issued</span></li><li>Starter MCC-03 / F-07<span class="state">Issued</span></li><li>Single-line diagram<span class="state">Issued</span></li></ul>
+          <p class="route"></p>
+        </article>
+        <article class="dcard" data-lead="Mechanical lead">
+          <header><h3>Mechanical</h3><span class="anno">3 items</span></header>
+          <ul><li>Motor envelope<span class="state">Issued</span></li><li>Skid GA<span class="state">Issued</span></li><li>Coupling selection<span class="state">Issued</span></li></ul>
+          <p class="route"></p>
+        </article>
+        <article class="dcard" data-lead="Civil / structural lead">
+          <header><h3>Civil / structural</h3><span class="anno">2 items</span></header>
+          <ul><li>Foundation loads<span class="state">Issued</span></li><li>Anchor interfaces<span class="state">Issued</span></li></ul>
+          <p class="route"></p>
+        </article>
+        <article class="dcard" data-lead="Controls lead">
+          <header><h3>Controls / delivery</h3><span class="anno">3 items</span></header>
+          <ul><li>Drive parameters<span class="state">Issued</span></li><li>Bill of materials<span class="state">Issued</span></li><li>FAT procedure<span class="state">Issued</span></li></ul>
+          <p class="route"></p>
+        </article>
+      </div>
+    </div>
+    <p class="principle"><span data-n="1">Show the delta.</span><span data-n="2">Mark stale outputs.</span><span data-n="3">Route review.</span><span data-n="4">Regenerate only under control.</span></p>
+  </div>
+</section>
+
+<!-- TRUST -->
+<section class="sheet" id="trust" aria-labelledby="h-trust">
+  <div class="wrap">
+    <div class="sheet-head">
+      <div>
+        <h2 id="h-trust">AI proposes. Engineering tools execute. People authorize.</h2>
+        <p class="lead">A layered execution architecture keeps capability separate from authority. Every output passes through four stages, and only a qualified person can release it.</p>
+      </div>
+      <div class="tblock"><span>Sheet 08</span><span>Principle</span></div>
+    </div>
+    <div class="lanes">
+      <div class="who" aria-hidden="true"><div>AI agent</div><div>Engineering tools</div><div>Independent checks</div><div>Qualified people</div></div>
+      <ol class="what" style="margin:0;padding:0;list-style:none">
+        <li><span class="lane-who">AI agent</span><b>1</b><h3>Understand</h3><p>Resolve scope, sources and missing information before any work starts.</p></li>
+        <li><span class="lane-who">Engineering tools</span><b>2</b><h3>Execute</h3><p>Run the approved skill with specialist CAD, code and calculation engines.</p></li>
+        <li><span class="lane-who">Independent checks</span><b>3</b><h3>Verify</h3><p>Check schema, geometry, function and provenance against acceptance criteria.</p></li>
+        <li><span class="lane-who">Qualified people</span><b>4</b><h3>Authorize</h3><p>Approve the exact output and the intended action. Nothing is released by default.</p></li>
+      </ol>
+    </div>
+    <div class="never">
+      <p>{{CROSS}}No uncontrolled production downloads.</p>
+      <p>{{CROSS}}No inferred certification.</p>
+      <p>{{CROSS}}No silent external commitments.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table class="ready">
+        <caption>How we label readiness</caption>
+        <thead><tr><th scope="col">Readiness</th><th scope="col">Evidence required</th><th scope="col">Do not infer</th></tr></thead>
+        <tbody>
+          <tr><td>Registered / draft</td><td>Package metadata, instructions or scripts exist</td><td>A functioning or approved workflow</td></tr>
+          <tr><td>Tested / native-validated</td><td>Independent test cases and target-tool import or build checks</td><td>Field suitability</td></tr>
+          <tr><td>Pilot-accepted</td><td>A qualified reviewer accepts representative output</td><td>Results beyond the measured scope</td></tr>
+          <tr><td>Released for a defined use</td><td>Versioned method, operating bounds and support</td><td>Authority for live or external actions, which is granted separately</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="states" aria-label="Deliverable states"><b style="color:var(--ink)">Deliverable states:</b><span>Working draft</span><i>›</i><span>Checked</span><i>›</i><span>Approved</span><i>›</i><span>Issued</span><i>›</i><span>Field-verified as-built</span></div>
+  </div>
+</section>
+
+<!-- PACKS -->
+<section class="sheet" id="packs" aria-labelledby="h-packs">
+  <div class="wrap">
+    <div class="sheet-head">
+      <div>
+        <h2 id="h-packs">Expand by discipline on the same foundation.</h2>
+        <p class="lead">Industry skill packs reuse the same model, execution and review layer. The proposed catalogue covers 120 deliverable workflows across 15 disciplines.</p>
+      </div>
+      <div class="tblock"><span>Sheet 09</span><span class="s-prop">Proposed catalogue</span></div>
+    </div>
+    <div class="packs">
+      <article class="pack first">
+        <svg class="dw" viewBox="0 0 48 48" aria-hidden="true"><circle cx="12" cy="24" r="8" class="ln"/><path d="M20 20H40M20 28H40" class="ln"/><rect x="28" y="17" width="5" height="5" class="pp"/><rect x="28" y="25" width="5" height="5" class="pp"/></svg>
+        <h3>Automation &amp; systems</h3><p>Loop drawings, panel GAs, control narratives, SCADA packages</p>
+        <span class="first-tag">First pack</span>
+      </article>
+      <article class="pack">
+        <svg class="dw" viewBox="0 0 48 48" aria-hidden="true"><circle cx="14" cy="26" r="8" class="ln"/><path d="M14 18H24V26H30M38 26H46" class="ln"/><path d="M30 21L38 31V21L30 31Z" class="pp"/></svg>
+        <h3>Process &amp; plant</h3><p>P&amp;IDs, line and equipment lists, piping, turnover packages</p>
+      </article>
+      <article class="pack">
+        <svg class="dw" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4V16M24 32V44" class="ln"/><path d="M24 16L32 30" class="ln"/><circle cx="24" cy="16" r="2.5" class="fill-ink"/><circle cx="24" cy="32" r="2.5" class="fill-ink"/><path d="M14 40H34" class="ln2"/></svg>
+        <h3>Electrical &amp; power</h3><p>Schematics, load lists, cable schedules, protection studies</p>
+      </article>
+      <article class="pack">
+        <svg class="dw" viewBox="0 0 48 48" aria-hidden="true"><rect x="6" y="14" width="36" height="22" class="ln"/><circle cx="18" cy="25" r="5" class="ln"/><path d="M28 20H36M28 25H36M28 30H33" class="ln2"/><path d="M6 42H42" class="ln2"/></svg>
+        <h3>Mechanical &amp; OEM</h3><p>Parts, assemblies, skid GAs, fabrication drawings, BOMs</p>
+      </article>
+      <article class="pack">
+        <svg class="dw" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 8H40M8 14H40M21 14V34M27 14V34M8 34H40M8 40H40" class="ln"/></svg>
+        <h3>Civil &amp; structural</h3><p>Grading, foundations, steel framing, quantities</p>
+      </article>
+      <article class="pack">
+        <svg class="dw" viewBox="0 0 48 48" aria-hidden="true"><path d="M6 20L24 6L42 20V42H6Z" class="ln"/><path d="M6 30H42M24 20V42" class="ln2"/><rect x="11" y="33" width="8" height="9" class="ln2"/></svg>
+        <h3>Buildings &amp; BIM</h3><p>Plans, MEP coordination, BMS point lists, asset data</p>
+      </article>
+    </div>
+    <p class="footnote">4ENG integrates with documented engineering APIs and open exchange formats such as DXF, PDF, IFC, STEP and DEXPI. Each adapter is built and acceptance-tested before use. No vendor partnership or native-file parity is implied.</p>
+  </div>
+</section>
+
+<!-- CAPACITY -->
+<section class="sheet" id="capacity" aria-labelledby="h-cap">
+  <div class="wrap">
+    <div class="sheet-head">
+      <div>
+        <h2 id="h-cap">Estimate the capacity your firm could recover.</h2>
+        <p class="lead">An inspectable model, not measured customer savings. The defaults reproduce our reference scenario: a 250-person firm recovering 2,000 net engineering hours a month after review and rework.</p>
+      </div>
+      <div class="tblock"><span>Sheet 10</span><span class="s-illu">Illustrative</span></div>
+    </div>
+    <div class="calc">
+      <form class="inputs" id="calcForm" onsubmit="return false" aria-label="Capacity model inputs">
+        <div class="field"><label for="cPeople">Engineering staff <output for="cPeople" id="oPeople">250</output></label><input type="range" id="cPeople" min="20" max="1000" step="10" value="250"></div>
+        <div class="field"><label for="cGross">Gross hours saved per person, per month <output for="cGross" id="oGross">10 h</output></label><input type="range" id="cGross" min="2" max="24" step="1" value="10"><small>Time removed from retyping, redrawing and reconciling.</small></div>
+        <div class="field"><label for="cReview">Review, validation and rework overhead <output for="cReview" id="oReview">20%</output></label><input type="range" id="cReview" min="0" max="60" step="5" value="20"><small>Subtracted because AI output still has to be checked.</small></div>
+        <div class="field"><label for="cRate">Loaded hourly value <output for="cRate" id="oRate">$35</output></label><input type="range" id="cRate" min="10" max="150" step="5" value="35"></div>
+        <div class="field"><label for="cRedeploy">Share of time productively redeployed <output for="cRedeploy" id="oRedeploy">50%</output></label><input type="range" id="cRedeploy" min="10" max="100" step="10" value="50"></div>
+      </form>
+      <div>
+        <div class="results" aria-live="polite">
+          <div><b id="rNet">2,000</b><span>net hours recovered per month</span></div>
+          <div><b id="rShare">5.0%</b><span>of a 160-hour month, firm-wide</span></div>
+          <div><b id="rValue">$35k</b><span>redeployed capacity value per month</span></div>
+        </div>
+        <p class="formula" id="rFormula">250 people × 10 h = 2,500 gross h − 20% review = 2,000 net h</p>
+
+        <div class="chart">
+          <h3>Where the reference hours come from</h3>
+          <p>Gross hours saved per month in the 250-person scenario, by workflow. All volumes and time reductions are assumptions.</p>
+          <div class="bars" id="bars"></div>
+          <div class="axis" aria-hidden="true"><div></div><div><span>0</span><span>200</span><span>400</span><span>600 h</span></div><div></div></div>
+          <p class="total">2,500 gross hours − 500 review and rework hours = <b>2,000 net hours</b></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TODAY + ROADMAP -->
+<section class="sheet" id="roadmap" aria-labelledby="h-road">
+  <div class="wrap">
+    <div class="sheet-head">
+      <div>
+        <h2 id="h-road">Where 4ENG is today, and what comes next.</h2>
+        <p class="lead">We separate the working foundation from the roadmap. Business modules, a skill registry and two pilots exist now. Released skills and measured customer value are the next proof.</p>
+      </div>
+      <div class="tblock"><span>Sheet 11</span><span class="s-obs">Observed pilots</span></div>
+    </div>
+    <div class="today">
+      <div>
+        <div class="counts">
+          <div><b>24</b><span>draft skill packages registered</span></div>
+          <div><b>12</b><span>test-mode runs recorded</span></div>
+          <div><b>2</b><span>pilots producing reviewable files</span></div>
+        </div>
+        <p class="caveat">Point-in-time registry snapshot, October 2026. "Succeeded" is a runtime status, not independent artifact validation. All skill packages remain in draft.</p>
+      </div>
+      <div class="pilots">
+        <article class="pilot">
+          <span class="anno">Pilot</span>
+          <h3>Technical proposal</h3>
+          <p>A document an engineer can review.</p>
+          <ul><li>DOCX and PDF artifact workflow</li><li>Drafts generated from approved templates</li><li>3 succeeded test-mode runs</li></ul>
+        </article>
+        <article class="pilot">
+          <span class="anno">Pilot</span>
+          <h3>Controller configuration</h3>
+          <p>A file an engineer can test offline.</p>
+          <ul><li>Template-based Horner CPM candidates</li><li>4 succeeded test-mode runs</li><li>Engineer-reported sample import success</li></ul>
+        </article>
+      </div>
+    </div>
+
+    <div class="road">
+      <h3>Proposed sequencing</h3>
+      <ol>
+        <li><span class="when">0 to 90 days</span><h3>Repeatable 2D output</h3><ul><li>Loop, termination and panel GA skills</li><li>Proposal, MDR and review packs</li><li>Independent drawing acceptance</li></ul></li>
+        <li><span class="when">3 to 6 months</span><h3>Specialist engineering</h3><ul><li>Mechanical families and assemblies</li><li>Native CAD and BIM adapters</li><li>P&amp;ID and change-impact pilots</li></ul></li>
+        <li><span class="when">6 to 12+ months</span><h3>Connected disciplines</h3><ul><li>Civil and structural partner workflows</li><li>1D, 2D and 3D coordination</li><li>Evidence-led industry expansion</li></ul></li>
+      </ol>
+      <p class="footnote">Each stage advances on measured acceptance, data quality, customer adoption and unit economics, not on the calendar alone.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNERS -->
+<section class="sheet" id="partners" aria-labelledby="h-partners">
+  <div class="wrap">
+    <div class="sheet-head">
+      <div>
+        <h2 id="h-partners">Prove the workflow before scaling the platform.</h2>
+        <p class="lead">A 90-day paid design-partner programme for automation firms, engineering service teams and equipment builders with 50 to 500 people, repeatable work and accessible source data.</p>
+      </div>
+      <div class="tblock"><span>Sheet 12</span><span class="s-obs">Open</span></div>
+    </div>
+    <div class="partner">
+      <div>
+        <ul class="wf">
+          <li><b>Workflow 1</b><div><h3>Proposal package</h3><p>Requirement compliance matrix and a source-backed technical draft.</p></div></li>
+          <li><b>Workflow 2</b><div><h3>Loop drawing batch</h3><p>Verified connectivity, editable drawings and validation reports.</p></div></li>
+          <li><b>Workflow 3</b><div><h3>Panel GA + BOM</h3><p>Approved component footprints and a constraint-checked layout.</p></div></li>
+        </ul>
+        <div class="measures">
+          <span class="anno">What we measure together</span>
+          <div><span>Net effort saved</span><span>First-pass acceptance</span><span>Defects found</span><span>Total execution cost</span></div>
+        </div>
+        <div class="origin">
+          <b>Built by people who deliver engineering projects</b>
+          <span>4ENG grows out of automation project delivery at Total Automation Solutions, in India since 2006 and Oman since 2008. Product and engineering are led by Venkatesh Majeti, CTO and Director.</span>
+        </div>
+      </div>
+      <form class="apply" id="applyForm" novalidate>
+        <h3>Apply to the programme</h3>
+        <div class="f2">
+          <div class="fi"><label for="fName">Name</label><input id="fName" name="name" autocomplete="name" required></div>
+          <div class="fi"><label for="fCompany">Company</label><input id="fCompany" name="company" autocomplete="organization" required></div>
+        </div>
+        <div class="f2">
+          <div class="fi"><label for="fEmail">Work email</label><input id="fEmail" name="email" type="email" autocomplete="email" required></div>
+          <div class="fi"><label for="fSize">Engineering team size</label>
+            <select id="fSize" name="size"><option value="">Select</option><option>Under 50</option><option>50 to 150</option><option>150 to 500</option><option>Over 500</option></select></div>
+        </div>
+        <div class="fi"><label for="fWorkflow">First workflow to prove</label>
+          <select id="fWorkflow" name="workflow"><option>Loop drawing batch</option><option>Panel GA + BOM</option><option>Proposal package</option><option>Something else</option></select></div>
+        <div class="fi"><label for="fMsg">What slows your engineers down today?</label><textarea id="fMsg" name="message" placeholder="For example: 400 loop drawings per project, rebuilt from the instrument index by hand."></textarea></div>
+        <div class="hp" aria-hidden="true"><label for="fWebsite">Website</label><input id="fWebsite" name="website" tabindex="-1" autocomplete="off"></div>
+        <button class="btn btn-primary" type="submit" id="fSubmit">Open email draft</button>
+        <p class="form-msg" id="formMsg" role="status"></p>
+        <p class="mailline">Your details stay in this browser until you send the email from your own mail app.</p>
+        <p class="mailline">Already have an invitation? <a href="{{APP}}">Sign up at 4ENG.app</a></p>
+        <p class="mailline">Prefer email? <code id="mailAddr">{{EMAIL}}</code> <button type="button" class="btn btn-sm" id="copyMail">Copy address</button></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sheet" id="faq" aria-labelledby="h-faq">
+  <div class="wrap">
+    <div class="sheet-head">
+      <div><h2 id="h-faq">Questions engineering leads ask</h2></div>
+    </div>
+    <div class="faq">
+{{FAQ_HTML}}
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div style="display:grid;gap:14px">
+      <a class="brand" href="#top" aria-label="4ENG home">{{LOGO}}</a>
+      <p>The AI execution platform for engineering firms. From approved requirements to reviewed drawings, code and handover evidence.</p>
+    </div>
+    <nav aria-label="Footer">
+      <a href="#platform">Platform</a><a href="#skills">Skills</a><a href="#change">Change impact</a><a href="#trust">Trust</a><a href="#roadmap">Roadmap</a><a href="#partners">Design partners</a><a href="#faq">FAQ</a><a href="{{APP}}">Sign up</a>
+    </nav>
+    <div class="legal">
+      <span>© <span id="yr">2026</span> 4ENG. All rights reserved.</span>
+      <span>Capabilities marked proposed or illustrative are not released products. Product names and formats are mentioned for interoperability only.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const yr = $('#yr'); if (yr) yr.textContent = new Date().getFullYear();
+
+  /* Mobile menu */
+  const mb = $('#menuBtn'), nav = $('#nav');
+  mb.addEventListener('click', () => { const o = nav.classList.toggle('open'); mb.setAttribute('aria-expanded', o); });
+  $$('#nav a').forEach(a => a.addEventListener('click', () => { nav.classList.remove('open'); mb.setAttribute('aria-expanded', 'false'); }));
+
+  /* Hero package sequence */
+  const svg = $('#pkg');
+  const ids = ['loop', 'ga', 'pid', 'plc', 'bom', 'ev'];
+  const labels = { queued: 'QUEUED', gen: 'GENERATING', checked: 'CHECKED', exc: '1 EXCEPTION', resolved: 'RESOLVED', ready: 'READY FOR APPROVAL', issued: 'ISSUED REV A' };
+  const cls = { queued: 'st-queued', gen: 'st-gen', checked: 'st-checked', exc: 'st-exc', resolved: 'st-checked', ready: 'st-ready', issued: 'st-issued' };
+  function chip(id, st) {
+    const g = $('#dl-' + id + ' .chip'); if (!g) return;
+    g.setAttribute('class', 'chip ' + cls[st]);
+    const t = g.querySelector('text'), r = g.querySelector('rect');
+    t.textContent = labels[st];
+    try { r.setAttribute('width', Math.ceil(t.getComputedTextLength() + 10)); } catch (e) {}
+  }
+  function step(n) { $$('#stepper .step').forEach(s => { const i = +s.dataset.i; s.setAttribute('class', 'step' + (i < n ? ' done' : i === n ? ' on' : '')); }); }
+  const cap = $('#pkgCaption'), approve = $('#approveBtn'), replay = $('#replayBtn');
+  let run = 0;
+  function restState() {
+    ids.forEach(i => chip(i, 'ready')); step(3);
+    $('#excCloud').classList.remove('on'); $('#stamp').classList.remove('on');
+    svg.classList.remove('drawing'); $$('.draw', svg).forEach(d => d.classList.remove('go'));
+    $$('.wire', svg).forEach(w => w.classList.remove('live'));
+    approve.disabled = false; approve.textContent = 'Approve and issue';
+    cap.textContent = 'Six deliverables generated from one model and checked. Nothing is issued until an engineer approves it.';
+  }
+  async function play() {
+    const me = ++run;
+    if (reduce) { restState(); return; }
+    approve.disabled = true;
+    $('#stamp').classList.remove('on'); $('#excCloud').classList.remove('on');
+    svg.classList.add('drawing'); $$('.draw', svg).forEach(d => d.classList.remove('go'));
+    ids.forEach(i => chip(i, 'queued')); step(-1);
+    const r1 = $('#rq1'), r2 = $('#rq2'), s1 = 'Prepare the reviewed design package', s2 = 'for this approved pumping skid.';
+    r1.textContent = ''; r2.textContent = '';
+    cap.textContent = 'Request received for SKID-100.';
+    await sleep(350);
+    for (let i = 1; i <= s1.length; i++) { if (me !== run) return; r1.textContent = s1.slice(0, i); await sleep(22); }
+    for (let i = 1; i <= s2.length; i++) { if (me !== run) return; r2.textContent = s2.slice(0, i); await sleep(22); }
+    await sleep(250); if (me !== run) return;
+    $('line.draw', svg).classList.add('go');
+    await sleep(500); const ring = $('#ring'); ring.classList.remove('pulse'); void ring.getBBox(); ring.classList.add('pulse');
+    cap.textContent = 'Resolving scope against the shared model: P-101, M-101, PT-101, FV-101, JB-101.';
+    await sleep(700); if (me !== run) return;
+    step(0); cap.textContent = 'Running approved skills for each deliverable.';
+    $$('#wires .draw').forEach(w => { w.classList.add('go'); w.classList.add('live'); });
+    for (const id of ids) { if (me !== run) return; chip(id, 'gen'); $$('#dl-' + id + ' .draw').forEach(d => d.classList.add('go')); await sleep(260); }
+    await sleep(700); if (me !== run) return;
+    step(1); cap.textContent = 'Checking continuity, references, clearances and provenance.';
+    for (const id of ids) { if (me !== run) return; if (id === 'loop') { chip(id, 'exc'); $('#excCloud').classList.add('on'); } else chip(id, 'checked'); await sleep(240); }
+    await sleep(600); if (me !== run) return;
+    step(2); cap.textContent = 'Exception: MC-101 pair 01 terminal already assigned. Proposed reassignment sent to the engineer.';
+    await sleep(1800); if (me !== run) return;
+    chip('loop', 'resolved'); $('#excCloud').classList.remove('on');
+    cap.textContent = 'Engineer accepted the reassignment. Loop drawing and schedules regenerated.';
+    await sleep(1100); if (me !== run) return;
+    step(3); ids.forEach(i => chip(i, 'ready'));
+    $$('.wire', svg).forEach(w => w.classList.remove('live'));
+    cap.textContent = 'Six deliverables generated from one model and checked. Nothing is issued until an engineer approves it.';
+    approve.disabled = false;
+  }
+  approve.addEventListener('click', async () => {
+    run++; approve.disabled = true; step(4);
+    for (const id of ids) { chip(id, 'issued'); if (!reduce) await sleep(120); }
+    $('#stamp').classList.add('on');
+    cap.textContent = 'Package issued as Rev A with its manifest and review record.';
+    approve.textContent = 'Issued';
+  });
+  replay.addEventListener('click', play);
+  restState();
+  if (!reduce) {
+    const io = new IntersectionObserver(es => { if (es[0].isIntersecting) { io.disconnect(); setTimeout(play, 300); } }, { threshold: .35 });
+    io.observe(svg);
+  }
+  document.fonts && document.fonts.ready.then(() => { if (!svg.classList.contains('drawing')) ids.forEach(i => { const g = $('#dl-' + i + ' .chip'); chip(i, Object.keys(cls).find(k => g.classList.contains(cls[k])) || 'ready'); }); });
+
+  /* Asset explorer */
+  const names = { duty: 'duty + datasheet', motor: 'motor + power cable', nozzles: 'nozzles + piping', io: 'I/O + control logic', foundation: 'foundation + loads', tests: 'drawings + tests' };
+  function pick(f) {
+    $$('.facet').forEach(g => g.setAttribute('aria-pressed', g.dataset.f === f));
+    $$('.spoke').forEach(s => s.classList.toggle('on', s.dataset.f === f));
+    let n = 0; const all = $$('#views li');
+    all.forEach(li => { const on = li.dataset.f.split(' ').includes(f); li.classList.toggle('on', on); if (on) n++; });
+    $('#viewsTitle').textContent = 'Deliverables using ' + names[f];
+    $('#viewsCount').textContent = n + ' of ' + all.length;
+  }
+  $$('.facet').forEach(g => {
+    g.addEventListener('click', () => pick(g.dataset.f));
+    g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(g.dataset.f); } });
+  });
+  pick('motor');
+
+  /* Change impact demo */
+  const cA = $('#chgApprove'), cR = $('#chgRegen'), cX = $('#chgReset'), log = $('#chgLog');
+  const cards = $$('#disc .dcard');
+  cA.addEventListener('click', async () => {
+    cA.disabled = true;
+    $('#oldVal').hidden = false; $('#newVal').textContent = '75';
+    $('#delta').textContent = 'Approved change: +20 kW (+36%)';
+    log.textContent = 'Tracing M-101 through the shared model.';
+    for (const c of cards) {
+      if (!reduce) await sleep(380);
+      c.classList.add('hit');
+      for (const s of $$('.state', c)) { s.textContent = 'Stale'; s.className = 'state stale'; if (!reduce) await sleep(90); }
+      $('.route', c).textContent = 'Review routed to ' + c.dataset.lead;
+    }
+    log.textContent = '12 deliverables marked stale across 4 disciplines. Issued revisions are untouched until each lead approves regeneration.';
+    cR.disabled = false; cX.hidden = false;
+  });
+  cR.addEventListener('click', async () => {
+    cR.disabled = true;
+    for (const c of cards) {
+      if (!reduce) await sleep(300);
+      c.classList.remove('hit'); c.classList.add('regen');
+      $$('.state', c).forEach(s => { s.textContent = 'Draft Rev +1'; s.className = 'state regen'; });
+      $('.route', c).textContent = 'Regenerated drafts awaiting ' + c.dataset.lead.toLowerCase();
+    }
+    log.textContent = 'New draft revisions created with a delta report. Each one still needs checking and approval before issue.';
+  });
+  cX.addEventListener('click', () => {
+    cards.forEach(c => { c.classList.remove('hit', 'regen'); $$('.state', c).forEach(s => { s.textContent = 'Issued'; s.className = 'state'; }); $('.route', c).textContent = ''; });
+    $('#oldVal').hidden = true; $('#newVal').textContent = '55'; $('#delta').textContent = 'Proposed change: 55 kW to 75 kW';
+    cA.disabled = false; cR.disabled = true; cX.hidden = true;
+    log.textContent = 'Approve the change to see which deliverables 4ENG marks for review.';
+  });
+
+  /* Capacity calculator */
+  const fmt = n => Math.round(n).toLocaleString('en-US');
+  const money = n => n >= 1e6 ? '$' + (n / 1e6).toFixed(n >= 1e7 ? 0 : 1) + 'M' : n >= 1000 ? '$' + Math.round(n / 1000) + 'k' : '$' + Math.round(n);
+  const inp = id => +$('#' + id).value;
+  function calc() {
+    const p = inp('cPeople'), g = inp('cGross'), rv = inp('cReview'), rate = inp('cRate'), rd = inp('cRedeploy');
+    const gross = p * g, net = gross * (1 - rv / 100), share = net / (p * 160) * 100, val = net * rate * rd / 100;
+    $('#oPeople').textContent = fmt(p); $('#oGross').textContent = g + ' h'; $('#oReview').textContent = rv + '%';
+    $('#oRate').textContent = '$' + rate; $('#oRedeploy').textContent = rd + '%';
+    $('#rNet').textContent = fmt(net); $('#rShare').textContent = share.toFixed(1) + '%'; $('#rValue').textContent = money(val);
+    $('#rFormula').textContent = fmt(p) + ' people × ' + g + ' h = ' + fmt(gross) + ' gross h − ' + rv + '% review = ' + fmt(net) + ' net h';
+  }
+  $$('#calcForm input').forEach(i => i.addEventListener('input', calc)); calc();
+
+  /* Reference workload bar chart (single series, one hue, direct labels) */
+  const rows = [
+    ['Document / change reviews', 300, 120, 600], ['Loop / wiring drawings', 300, 90, 450], ['Reports, actions, handover', 450, 60, 450],
+    ['Control / test packages', 40, 480, 320], ['GA / template drawings', 80, 180, 240], ['Tender / proposal packages', 40, 360, 240], ['BOM / supplier comparisons', 100, 120, 200]
+  ];
+  const bars = $('#bars'); const tip = document.createElement('div'); tip.className = 'tip'; tip.hidden = true; bars.appendChild(tip);
+  rows.forEach(([n, inst, min, h]) => {
+    const r = document.createElement('div'); r.className = 'bar'; r.tabIndex = 0;
+    r.setAttribute('aria-label', n + ': ' + h + ' gross hours, ' + inst + ' instances at ' + min + ' minutes saved each');
+    r.innerHTML = '<span class="lbl">' + n + '</span><span class="track"><span class="fillbar" style="display:block;width:' + (h / 600 * 100) + '%"></span></span><span class="v">' + h + ' h</span>';
+    const show = e => {
+      tip.textContent = inst + ' instances × ' + min + ' min = ' + h + ' h'; tip.hidden = false;
+      const br = bars.getBoundingClientRect(), rr = r.getBoundingClientRect();
+      let x = (e && e.clientX ? e.clientX : rr.left + rr.width / 2) - br.left + 12;
+      x = Math.min(x, br.width - tip.offsetWidth - 4);
+      tip.style.left = Math.max(0, x) + 'px'; tip.style.top = (rr.top - br.top - 34) + 'px';
+    };
+    r.addEventListener('mousemove', show); r.addEventListener('focus', () => show()); r.addEventListener('mouseleave', () => tip.hidden = true); r.addEventListener('blur', () => tip.hidden = true);
+    bars.appendChild(r);
+  });
+
+  /* Application form */
+  const form = $('#applyForm'), msg = $('#formMsg'), mail = $('#mailAddr').textContent.trim();
+  form.addEventListener('submit', e => {
+    e.preventDefault(); msg.className = 'form-msg'; msg.textContent = '';
+    const d = Object.fromEntries(new FormData(form).entries());
+    if (!d.name || !d.company || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email || '')) { msg.className = 'form-msg err'; msg.textContent = 'Add your name, company and a valid work email to prepare the application.'; return; }
+    const subject = '4ENG design-partner application — ' + d.company;
+    const body = [
+      'Name: ' + d.name,
+      'Company: ' + d.company,
+      'Work email: ' + d.email,
+      'Engineering team size: ' + (d.size || 'Not specified'),
+      'First workflow to prove: ' + d.workflow,
+      '',
+      'What slows the team down today:',
+      d.message || 'Not provided'
+    ].join('\n');
+    msg.className = 'form-msg ok'; msg.textContent = 'Opening a pre-addressed email draft. Review it, then send it from your mail app.';
+    window.location.href = 'mailto:' + mail + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  });
+  $('#copyMail').addEventListener('click', e => {
+    const btn = e.currentTarget;
+    const done = () => { btn.textContent = 'Copied'; setTimeout(() => btn.textContent = 'Copy address', 1600); };
+    const sel = () => { const r = document.createRange(); r.selectNodeContents($('#mailAddr')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = 'Selected, press Ctrl+C'; };
+    try { navigator.clipboard.writeText(mail).then(done, sel); } catch (x) { sel(); }
+  });
+})();
+</script>
+</body>
+</html>

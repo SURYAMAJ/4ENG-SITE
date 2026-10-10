@@ -1,0 +1,20 @@
+# 4ENG
+
+> 4ENG is an AI execution platform for engineering firms. It connects a shared engineering model, tested production skills and governed human review so approved requirements become reviewed deliverables: loop drawings, panel general arrangements, control packages, proposals and handover evidence.
+
+## Status
+- In active development (October 2026). Drawing and multidiscipline workflows are proposed capabilities validated with design partners before release.
+- Observed today: 24 draft skill packages, 12 test-mode runs, two pilots (technical proposal DOCX/PDF drafts; offline controller configuration candidates).
+
+## Key ideas
+- A drawing is a view; the asset (stable object identity) is the intelligence.
+- A skill is a tested production method: input contract, approved knowledge, executable tools, acceptance evidence.
+- AI proposes, engineering tools execute, qualified people authorize. No inferred certification.
+- Change impact: an approved change marks affected deliverables stale and routes review; it never overwrites issued work.
+
+## Audience
+Automation and systems integration firms, engineering service teams and equipment builders with 50 to 500 people.
+
+## Links
+- Website: https://4eng.tech/
+- Design-partner programme: https://4eng.tech/#partners
